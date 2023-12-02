@@ -27,13 +27,15 @@ namespace ka
         std::cout << '[' << m_name << "] "
                   << "copy assignment" << '\n';
 
-        if (&other != this)
-            m_name = other.m_name;
+        if (&other == this)
+            return *this;
+
+        m_name = other.m_name;
 
         return *this;
     }
 
-    life_time::life_time(life_time &&other) noexcept : m_name(std::move(other.m_name))
+    life_time::life_time(life_time &&other) noexcept : m_name(other.m_name)
     {
         std::cout << '[' << m_name << "] "
                   << "move constructor" << '\n';
@@ -44,8 +46,10 @@ namespace ka
         std::cout << '[' << m_name << "] "
                   << "move assignment" << '\n';
 
-        if (&other != this)
-            m_name = std::move(other.m_name);
+        if (&other == this)
+            return *this;
+
+        m_name = other.m_name;
 
         return *this;
     }
