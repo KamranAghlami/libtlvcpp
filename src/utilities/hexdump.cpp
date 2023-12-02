@@ -9,7 +9,7 @@ namespace ka
         auto _data = static_cast<const uint8_t *>(data);
 
         size_t i, j;
-        char ascii[17];
+        uint8_t ascii[17];
 
         ascii[16] = '\0';
 
@@ -25,7 +25,7 @@ namespace ka
             }
 
             if (_data[i] >= ' ' && _data[i] <= '~')
-                ascii[i % 16] = static_cast<const char>(_data[i]);
+                ascii[i % 16] = _data[i];
             else
                 ascii[i % 16] = '.';
 
