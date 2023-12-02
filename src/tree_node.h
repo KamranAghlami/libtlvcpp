@@ -36,7 +36,7 @@ namespace ka
         {
             std::function<void(const tree_node &, size_t)> dump_recursive = [&](const tree_node &node, const size_t &indentation)
             {
-                stream << std::setw(indentation + 2) << ""
+                stream << std::setw(static_cast<int>(indentation) + 2) << ""
                        << "* "
                        << node.m_data
                        << '\n';

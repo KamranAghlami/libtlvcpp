@@ -9,15 +9,15 @@ namespace ka
 {
     using tag = uint32_t;
     using length = uint32_t;
-    using value = uint8_t *;
+    using value = uint8_t;
 
     class tlv : private life_time
     {
     public:
-        tlv(const tag &tag = 0, const length &length = 0, const value &value = nullptr);
+        tlv(const tag &tag = 0, const length &length = 0, const value *value = nullptr);
 
         template <typename T>
-        tlv(const tag &tag, const T &type);
+        tlv(const tag &tag, const T &&type);
 
         explicit tlv(const tag &tag, const char *string);
 
@@ -28,6 +28,6 @@ namespace ka
     private:
         tag m_tag;
         length m_length;
-        value m_value;
+        value *m_value;
     };
 }

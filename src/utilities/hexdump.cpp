@@ -16,7 +16,7 @@ namespace ka
         for (i = 0; i < size; i++)
         {
             if (!(i % 16))
-                stream << std::setw(indentation) << "";
+                stream << std::setw(static_cast<int>(indentation)) << "";
 
             {
                 iostream_state_guard state_guard{stream};

@@ -8,7 +8,7 @@
 
 namespace ka
 {
-    tlv::tlv(const tag &tag, const length &length, const value &value) : life_time(__func__),
+    tlv::tlv(const tag &tag, const length &length, const value *value) : life_time(__func__),
                                                                          m_tag(tag),
                                                                          m_length(length),
                                                                          m_value(nullptr)
@@ -22,12 +22,15 @@ namespace ka
     }
 
     template <>
-    tlv::tlv(const tag &tag, const std::string_view &string) : tlv(tag, std::min(string.size(), static_cast<size_t>(std::numeric_limits<length>::max())), (const value)string.data())
+    tlv::tlv(const tag &tag, const std::string_view &&string) : tlv(
+                                                                    tag,
+                                                                    static_cast<length>(string.size()),
+                                                                    reinterpret_cast<const value *>(string.data()))
     {
     }
 
     template <>
-    tlv::tlv(const tag &tag, const std::string &string) : tlv(tag, std::string_view{string})
+    tlv::tlv(const tag &tag, const std::string &&string) : tlv(tag, std::string_view{string})
     {
     }
 
