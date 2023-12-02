@@ -13,6 +13,8 @@ namespace ka
         {
         }
 
+        const tree_node<T> &root() const { return m_root; }
+
         tree_node<T> &root() { return m_root; }
 
     private:

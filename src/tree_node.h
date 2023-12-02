@@ -21,6 +21,11 @@ namespace ka
         {
         }
 
+        const T &data() const
+        {
+            return m_data;
+        }
+
         T &data()
         {
             return m_data;
@@ -32,7 +37,7 @@ namespace ka
             return m_children.emplace_back(this, std::forward<Args>(args)...);
         }
 
-        void dump(const size_t &indentation = 0, std::ostream &stream = std::cout)
+        void dump(const size_t &indentation = 0, std::ostream &stream = std::cout) const
         {
             std::function<void(const tree_node &, size_t)> dump_recursive = [&](const tree_node &node, const size_t &indentation)
             {
