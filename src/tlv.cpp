@@ -46,10 +46,15 @@ namespace ka
 
     std::ostream &operator<<(std::ostream &stream, const tlv &tlv)
     {
+        const auto width = stream.width();
+
         {
             iostream_state_guard state_guard{stream};
 
-            stream << "tag: 0x" << std::hex << std::setw(2) << std::setfill('0') << tlv.m_tag;
+            stream << ""
+                   << "* tag: 0x"
+                   << std::hex << std::setw(2) << std::setfill('0')
+                   << tlv.m_tag;
         }
 
         stream << ", length: " << tlv.m_length << ", value:";
@@ -58,7 +63,7 @@ namespace ka
         {
             stream << "\n";
 
-            hexdump(tlv.m_value, tlv.m_length, 2, stream);
+            hexdump(tlv.m_value, tlv.m_length, width + 4, stream);
         }
         else
             stream << " " << nullptr;
