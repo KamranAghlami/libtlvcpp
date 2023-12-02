@@ -25,7 +25,7 @@ namespace ka
             }
 
             if (_data[i] >= ' ' && _data[i] <= '~')
-                ascii[i % 16] = _data[i];
+                ascii[i % 16] = static_cast<const char>(_data[i]);
             else
                 ascii[i % 16] = '.';
 

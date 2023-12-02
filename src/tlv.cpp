@@ -46,7 +46,7 @@ namespace ka
 
     std::ostream &operator<<(std::ostream &stream, const tlv &tlv)
     {
-        const auto width = stream.width();
+        const auto width = static_cast<size_t>(stream.width());
 
         {
             iostream_state_guard state_guard{stream};
