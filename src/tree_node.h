@@ -21,6 +21,42 @@ namespace ka
         {
         }
 
+        // ~tree_node(){};
+
+        // tree_node(const tree_node &other) : life_time(__func__),
+        //                                     m_parent(other.m_parent),
+        //                                     m_data(other.m_data),
+        //                                     m_children(other.m_children){};
+
+        // tree_node &operator=(const tree_node &other)
+        // {
+        //     if (&other == this)
+        //         return *this;
+
+        //     m_parent = other.m_parent;
+        //     m_data = other.m_data;
+        //     m_children = other.m_children;
+
+        //     return *this;
+        // };
+
+        // tree_node(tree_node &&other) noexcept : life_time(__func__),
+        //                                         m_parent(std::move(other.m_parent)),
+        //                                         m_data(std::move(other.m_data)),
+        //                                         m_children(std::move(other.m_children)){};
+
+        // tree_node &operator=(tree_node &&other) noexcept
+        // {
+        //     if (&other == this)
+        //         return *this;
+
+        //     m_parent = std::move(other.m_parent);
+        //     m_data = std::move(other.m_data);
+        //     m_children = std::move(other.m_children);
+
+        //     return *this;
+        // };
+
         const T &data() const
         {
             return m_data;
