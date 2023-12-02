@@ -1,5 +1,7 @@
 #include "tlv.h"
 
+#include <cstring>
+
 #include "utilities/iostream_state_guard.h"
 #include "utilities/hexdump.h"
 #include "limits"
