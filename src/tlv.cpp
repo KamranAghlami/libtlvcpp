@@ -44,6 +44,56 @@ namespace ka
             delete[] m_value;
     }
 
+    tlv::tlv(const tlv &other) : tlv(other.m_tag, other.m_length, other.m_value)
+    {
+    }
+
+    tlv &tlv::operator=(const tlv &other)
+    {
+        if (&other == this)
+            return *this;
+
+        m_tag = other.m_tag;
+        m_length = other.m_length;
+
+        if (m_value)
+            delete[] m_value;
+
+        if (m_length)
+        {
+            m_value = new uint8_t[m_length];
+
+            std::memcpy(m_value, other.m_value, m_length);
+        }
+        else
+            m_value = nullptr;
+
+        return *this;
+    }
+
+    tlv::tlv(tlv &&other) noexcept : tlv(std::move(other.m_tag), std::move(other.m_length), std::move(other.m_value))
+    {
+        other.m_value = nullptr;
+    }
+
+    tlv &tlv::operator=(tlv &&other) noexcept
+    {
+        if (&other == this)
+            return *this;
+
+        m_tag = std::move(other.m_tag);
+        m_length = std::move(other.m_length);
+
+        if (m_value)
+            delete[] m_value;
+
+        m_value = std::move(other.m_value);
+
+        other.m_value = nullptr;
+
+        return *this;
+    }
+
     std::ostream &operator<<(std::ostream &stream, const tlv &tlv)
     {
         const auto width = static_cast<size_t>(stream.width());

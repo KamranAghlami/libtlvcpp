@@ -23,6 +23,12 @@ namespace ka
 
         ~tlv();
 
+        tlv(const tlv &other);
+        tlv &operator=(const tlv &other);
+
+        tlv(tlv &&other) noexcept;
+        tlv &operator=(tlv &&other) noexcept;
+
         friend std::ostream &operator<<(std::ostream &stream, const tlv &tlv);
 
     private:
