@@ -32,8 +32,8 @@ namespace ka
         friend std::ostream &operator<<(std::ostream &stream, const tlv &tlv);
 
     private:
-        tag m_tag;
-        length m_length;
-        value *m_value;
+        tag m_tag = 0;
+        length m_length = 0;
+        value *m_value = nullptr;
     };
 }

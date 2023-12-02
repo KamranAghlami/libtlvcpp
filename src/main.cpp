@@ -4,13 +4,13 @@
 // {
 // template <>
 // template <>
-// tlv_tree::tree(const tlv_tree &other) : life_time(__func__), m_root(other.root())
+// tlv_tree::tree(const tlv_tree &other) : life_time(std::move(other)), m_root(other.root())
 // {
 // }
 
 // template <>
 // template <>
-// tlv_tree::tree(tlv_tree &&other) : life_time(__func__), m_root(other.root())
+// tlv_tree::tree(tlv_tree &&other) : life_time(std::move(other)), m_root(other.root())
 // {
 // }
 // }
@@ -25,8 +25,6 @@ int main()
 
     l11.add_node(3U, "Hello, World!!!!");
     l12.add_node(4U, "A not so long sentence!");
-
-    std::cout << "!\n";
 
     ka::tlv_tree tlvt2{std::move(tlvt)};
 

@@ -71,7 +71,7 @@ namespace ka
         return *this;
     }
 
-    tlv::tlv(tlv &&other) noexcept
+    tlv::tlv(tlv &&other) noexcept : life_time(std::move(other))
     {
         m_tag = std::move(other.m_tag);
         m_length = std::move(other.m_length);
