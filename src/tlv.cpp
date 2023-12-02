@@ -71,8 +71,16 @@ namespace ka
         return *this;
     }
 
-    tlv::tlv(tlv &&other) noexcept : tlv(std::move(other.m_tag), std::move(other.m_length), std::move(other.m_value))
+    tlv::tlv(tlv &&other) noexcept
     {
+        m_tag = std::move(other.m_tag);
+        m_length = std::move(other.m_length);
+
+        if (m_value)
+            delete[] m_value;
+
+        m_value = std::move(other.m_value);
+
         other.m_value = nullptr;
     }
 
