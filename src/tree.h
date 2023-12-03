@@ -9,7 +9,7 @@ namespace ka
     {
     public:
         template <typename... Args>
-        tree(Args &&...args) : life_time(__func__), m_root(nullptr, std::forward<Args>(args)...)
+        tree(const Args &&...args) : life_time(__func__), m_root(nullptr, std::forward<Args>(args)...)
         {
         }
 
