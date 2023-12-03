@@ -1,19 +1,13 @@
 #include "tlv_tree.h"
 
-// namespace ka
-// {
-// template <>
-// template <>
-// tlv_tree::tree(const tlv_tree &other) : life_time(std::move(other)), m_root(other.root())
-// {
-// }
-
-// template <>
-// template <>
-// tlv_tree::tree(tlv_tree &&other) : life_time(std::move(other)), m_root(other.root())
-// {
-// }
-// }
+namespace ka
+{
+    template <>
+    template <>
+    tlv_tree::tree(tlv_tree &other) : life_time(other), m_root(other.root())
+    {
+    }
+}
 
 int main()
 {
@@ -26,7 +20,7 @@ int main()
     l11.add_node(3U, "Hello, World!!!!");
     l12.add_node(4U, "A not so long sentence!");
 
-    ka::tlv_tree tlvt2{std::move(tlvt)};
+    ka::tlv_tree tlvt2{tlvt};
 
     tlvt2.root().dump();
 }

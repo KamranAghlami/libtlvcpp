@@ -13,11 +13,6 @@ namespace ka
         {
         }
 
-        // ~tree() = default;
-
-        // tree &operator=(const tree &other) = default;
-        // tree &operator=(tree &&other) noexcept = default;
-
         const tree_node<T> &root() const { return m_root; }
 
         tree_node<T> &root() { return m_root; }
