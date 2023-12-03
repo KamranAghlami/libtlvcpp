@@ -44,8 +44,17 @@ namespace ka
             delete[] m_value;
     }
 
-    tlv::tlv(const tlv &other) : tlv(other.m_tag, other.m_length, other.m_value)
+    tlv::tlv(const tlv &other) : life_time(other),
+                                 m_tag(other.m_tag),
+                                 m_length(other.m_length),
+                                 m_value(nullptr)
     {
+        if (m_length)
+        {
+            m_value = new uint8_t[m_length];
+
+            std::memcpy(m_value, other.m_value, m_length);
+        }
     }
 
     tlv &tlv::operator=(const tlv &other)
