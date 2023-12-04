@@ -2,7 +2,7 @@
 
 int main()
 {
-    ka::tlv_tree tlvt{};
+    ka::tlv_tree tlvt;
 
     auto &l0 = tlvt.root();
     auto &l11 = l0.add_node(1U, "Hello, World!");
