@@ -5,11 +5,11 @@
 namespace ka
 {
     template <typename T>
-    class tree : private life_time
+    class tree
     {
     public:
         template <typename... Args>
-        tree(const Args &&...args) : life_time(__func__), m_root(nullptr, std::forward<Args>(args)...)
+        tree(const Args &&...args) : m_root(nullptr, std::forward<Args>(args)...)
         {
         }
 

@@ -6,17 +6,14 @@
 #include <iostream>
 #include <iomanip>
 
-#include "utilities/life_time.h"
-
 namespace ka
 {
     template <typename T>
-    class tree_node : private life_time
+    class tree_node
     {
     public:
         template <typename... Args>
-        tree_node(tree_node *parent, Args &&...args) : life_time(__func__),
-                                                       m_parent(parent),
+        tree_node(tree_node *parent, Args &&...args) : m_parent(parent),
                                                        m_data(std::forward<Args>(args)...)
         {
         }
@@ -41,7 +38,7 @@ namespace ka
         {
             std::function<void(const tree_node &, size_t)> dump_recursive = [&](const tree_node &node, const size_t &indentation)
             {
-                stream << std::setw(static_cast<int>(indentation) + 2) << node.m_data << '\n';
+                stream << std::setw(static_cast<int>(indentation) + 1) << node.m_data << '\n';
 
                 for (const auto &child : node.m_children)
                     dump_recursive(child, indentation + 2);
