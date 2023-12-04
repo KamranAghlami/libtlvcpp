@@ -5,5 +5,7 @@
 
 namespace ka
 {
-    using tlv_tree = tree<tlv>;
+    class tlv_tree : public tree<tlv>
+    {
+    };
 }
