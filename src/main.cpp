@@ -11,7 +11,5 @@ int main()
     l11.add_node(3U, "Hello, World!!!!");
     l12.add_node(4U, "A not so long sentence!");
 
-    ka::tlv_tree tlvt2{std::move(tlvt)};
-
-    tlvt2.root().dump();
+    l0.dump();
 }
