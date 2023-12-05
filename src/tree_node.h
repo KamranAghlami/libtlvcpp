@@ -37,6 +37,7 @@ namespace ka
         void clear()
         {
             m_children.clear();
+
             m_data = T();
         }
 

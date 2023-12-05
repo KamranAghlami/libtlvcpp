@@ -11,5 +11,6 @@ int main()
     l11.add_node(3U, "Hello, World!!!!");
     l12.add_node(4U, "A not so long sentence!");
 
+    tlvt.clear();
     tlvt.dump();
 }

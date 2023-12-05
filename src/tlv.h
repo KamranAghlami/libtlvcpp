@@ -3,13 +3,15 @@
 #include <cstdint>
 #include <ostream>
 
+#include <utilities/life_time.h>
+
 namespace ka
 {
     using tag = uint32_t;
     using length = uint32_t;
     using value = uint8_t;
 
-    class tlv
+    class tlv : private life_time
     {
     public:
         tlv(const tag &tag = 0, const length &length = 0, const value *value = nullptr);

@@ -8,7 +8,8 @@
 
 namespace ka
 {
-    tlv::tlv(const ka::tag &tag, const ka::length &length, const ka::value *value) : m_tag(tag),
+    tlv::tlv(const ka::tag &tag, const ka::length &length, const ka::value *value) : life_time(__func__ + std::string("_") + std::to_string(tag)),
+                                                                                     m_tag(tag),
                                                                                      m_length(length),
                                                                                      m_value(nullptr)
     {
@@ -43,7 +44,8 @@ namespace ka
             delete[] m_value;
     }
 
-    tlv::tlv(const tlv &other) : m_tag(other.m_tag),
+    tlv::tlv(const tlv &other) : life_time(other),
+                                 m_tag(other.m_tag),
                                  m_length(other.m_length),
                                  m_value(nullptr)
     {
@@ -78,7 +80,7 @@ namespace ka
         return *this;
     }
 
-    tlv::tlv(tlv &&other) noexcept
+    tlv::tlv(tlv &&other) noexcept : life_time(other)
     {
         m_tag = std::move(other.m_tag);
         m_length = std::move(other.m_length);
