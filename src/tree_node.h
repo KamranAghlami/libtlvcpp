@@ -38,17 +38,19 @@ namespace ka
         {
             if (m_parent)
             {
-                auto this_iter = std::find_if(m_parent->m_children.begin(),
-                                              m_parent->m_children.end(),
-                                              [this](const tree_node &node)
-                                              { return &node == this; });
+                auto current_node = std::find_if(m_parent->m_children.begin(),
+                                                 m_parent->m_children.end(),
+                                                 [this](const tree_node &node)
+                                                 { return &node == this; });
 
-                m_parent->m_children.erase(this_iter);
+                m_parent->m_children.erase(current_node);
             }
             else
             {
                 m_children.clear();
-                m_data = std::move(T());
+
+                m_data.~T();
+                new (&m_data) T();
             }
         }
 
