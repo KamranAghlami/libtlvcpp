@@ -17,9 +17,9 @@ namespace ka
 
         tree_node<T> &root() { return m_root; }
 
-        void clear()
+        void erase()
         {
-            m_root.clear();
+            m_root.erase();
         }
 
         void dump() const

@@ -34,11 +34,22 @@ namespace ka
             return m_children.emplace_back(this, std::forward<Args>(args)...);
         }
 
-        void clear()
+        void erase()
         {
-            m_children.clear();
+            if (m_parent)
+            {
+                auto this_iter = std::find_if(m_parent->m_children.begin(),
+                                              m_parent->m_children.end(),
+                                              [this](const tree_node &node)
+                                              { return &node == this; });
 
-            m_data = T();
+                m_parent->m_children.erase(this_iter);
+            }
+            else
+            {
+                m_children.clear();
+                m_data = std::move(T());
+            }
         }
 
         void dump(const size_t &indentation = 0, std::ostream &stream = std::cout) const
