@@ -29,6 +29,10 @@ namespace ka
 
         friend std::ostream &operator<<(std::ostream &stream, const tlv &tlv);
 
+        tag get_tag() const { return m_tag; }
+        length get_length() const { return m_length; }
+        value *get_value() const { return m_value; }
+
     private:
         tag m_tag = 0;
         length m_length = 0;
