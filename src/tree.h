@@ -17,6 +17,11 @@ namespace ka
 
         tree_node<T> &root() { return m_root; }
 
+        void clear()
+        {
+            m_root.clear();
+        }
+
         void dump() const
         {
             m_root.dump();

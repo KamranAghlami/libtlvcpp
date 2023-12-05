@@ -29,13 +29,13 @@ namespace ka
 
         friend std::ostream &operator<<(std::ostream &stream, const tlv &tlv);
 
-        tag get_tag() const { return m_tag; }
-        length get_length() const { return m_length; }
-        value *get_value() const { return m_value; }
+        tag tag() const { return m_tag; }
+        length length() const { return m_length; }
+        value *value() const { return m_value; }
 
     private:
-        tag m_tag = 0;
-        length m_length = 0;
-        value *m_value = nullptr;
+        ka::tag m_tag = 0;
+        ka::length m_length = 0;
+        ka::value *m_value = nullptr;
     };
 }

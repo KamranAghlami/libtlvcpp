@@ -8,9 +8,9 @@
 
 namespace ka
 {
-    tlv::tlv(const tag &tag, const length &length, const value *value) : m_tag(tag),
-                                                                         m_length(length),
-                                                                         m_value(nullptr)
+    tlv::tlv(const ka::tag &tag, const ka::length &length, const ka::value *value) : m_tag(tag),
+                                                                                     m_length(length),
+                                                                                     m_value(nullptr)
     {
         if (m_length)
         {
@@ -21,19 +21,19 @@ namespace ka
     }
 
     template <>
-    tlv::tlv(const tag &tag, const std::string_view &&string) : tlv(
-                                                                    tag,
-                                                                    static_cast<length>(string.size()),
-                                                                    reinterpret_cast<const value *>(string.data()))
+    tlv::tlv(const ka::tag &tag, const std::string_view &&string) : tlv(
+                                                                        tag,
+                                                                        static_cast<ka::length>(string.size()),
+                                                                        reinterpret_cast<const ka::value *>(string.data()))
     {
     }
 
     template <>
-    tlv::tlv(const tag &tag, const std::string &&string) : tlv(tag, std::string_view{string})
+    tlv::tlv(const ka::tag &tag, const std::string &&string) : tlv(tag, std::string_view{string})
     {
     }
 
-    tlv::tlv(const tag &tag, const char *string) : tlv(tag, std::string_view{string})
+    tlv::tlv(const ka::tag &tag, const char *string) : tlv(tag, std::string_view{string})
     {
     }
 
