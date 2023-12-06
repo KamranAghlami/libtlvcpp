@@ -8,10 +8,10 @@
 
 namespace ka
 {
-    tlv::tlv(const ka::tag &tag, const ka::length &length, const ka::value *value) : life_time(__func__ + std::string("_") + std::to_string(tag)),
-                                                                                     m_tag(tag),
-                                                                                     m_length(length),
-                                                                                     m_value(nullptr)
+    tlv::tlv(const tag_t &tag, const length_t &length, const value_t *value) : life_time(__func__ + std::string("_") + std::to_string(tag)),
+                                                                               m_tag(tag),
+                                                                               m_length(length),
+                                                                               m_value(nullptr)
     {
         if (m_length)
         {
@@ -22,19 +22,19 @@ namespace ka
     }
 
     template <>
-    tlv::tlv(const ka::tag &tag, const std::string_view &&string) : tlv(
-                                                                        tag,
-                                                                        static_cast<ka::length>(string.size()),
-                                                                        reinterpret_cast<const ka::value *>(string.data()))
+    tlv::tlv(const tag_t &tag, const std::string_view &&string) : tlv(
+                                                                      tag,
+                                                                      static_cast<length_t>(string.size()),
+                                                                      reinterpret_cast<const value_t *>(string.data()))
     {
     }
 
     template <>
-    tlv::tlv(const ka::tag &tag, const std::string &&string) : tlv(tag, std::string_view{string})
+    tlv::tlv(const tag_t &tag, const std::string &&string) : tlv(tag, std::string_view{string})
     {
     }
 
-    tlv::tlv(const ka::tag &tag, const char *string) : tlv(tag, std::string_view{string})
+    tlv::tlv(const tag_t &tag, const char *string) : tlv(tag, std::string_view{string})
     {
     }
 
