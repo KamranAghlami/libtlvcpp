@@ -24,6 +24,16 @@ namespace ka
         {
         }
 
+        const _tree_node *parent() const
+        {
+            return m_parent;
+        }
+
+        _tree_node *parent()
+        {
+            return m_parent;
+        }
+
         const T &data() const
         {
             return m_data;
@@ -32,6 +42,16 @@ namespace ka
         T &data()
         {
             return m_data;
+        }
+
+        const std::list<_tree_node> &children() const
+        {
+            return m_children;
+        }
+
+        std::list<_tree_node> &children()
+        {
+            return m_children;
         }
 
         template <typename... Args>
