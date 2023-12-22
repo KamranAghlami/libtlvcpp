@@ -1,4 +1,5 @@
 #include "tlv_tree.h"
+#include "utilities/hexdump.h"
 
 int main()
 {
@@ -11,5 +12,12 @@ int main()
     l11.add_child(3U, "Hello, World!!!!");
     l12.add_child(4U, "A not so long sentence!");
 
+    std::cout << "tree:\n";
     tlvt.dump();
+
+    std::vector<uint8_t> buffer;
+    tlvt.serialize(buffer);
+
+    std::cout << "serialized:\n";
+    ka::hexdump(buffer.data(), buffer.size());
 }

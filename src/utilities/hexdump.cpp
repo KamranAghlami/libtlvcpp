@@ -34,12 +34,7 @@ namespace ka
                 stream << " ";
 
                 if ((i + 1) % 16 == 0)
-                {
-                    stream << "|  " << ascii;
-
-                    if (i + 1 != size)
-                        stream << "\n";
-                }
+                    stream << "|  " << ascii << '\n';
                 else if (i + 1 == size)
                 {
                     ascii[(i + 1) % 16] = '\0';
@@ -50,7 +45,7 @@ namespace ka
                     for (j = (i + 1) % 16; j < 16; ++j)
                         stream << "   ";
 
-                    stream << "|  " << ascii;
+                    stream << "|  " << ascii << '\n';
                 }
             }
         }

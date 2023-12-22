@@ -128,12 +128,12 @@ namespace ka
 
         if (tlv.m_length)
         {
-            stream << "\n";
+            stream << '\n';
 
             hexdump(tlv.m_value, tlv.m_length, width + 4, stream);
         }
         else
-            stream << " " << nullptr;
+            stream << " " << nullptr << '\n';
 
         return stream;
     }
