@@ -13,6 +13,12 @@ namespace ka
     {
     public:
         template <typename... Args>
+        tree_node(Args &&...args) : m_parent(nullptr),
+                                    m_data(std::forward<Args>(args)...)
+        {
+        }
+
+        template <typename... Args>
         tree_node(tree_node *parent, Args &&...args) : m_parent(parent),
                                                        m_data(std::forward<Args>(args)...)
         {
@@ -29,7 +35,7 @@ namespace ka
         }
 
         template <typename... Args>
-        tree_node<T> &add_node(Args &&...args)
+        tree_node<T> &add_child(Args &&...args)
         {
             return m_children.emplace_back(this, std::forward<Args>(args)...);
         }

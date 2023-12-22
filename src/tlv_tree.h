@@ -1,11 +1,9 @@
 #pragma once
 
-#include "tree.h"
+#include "tree_node.h"
 #include "tlv.h"
 
 namespace ka
 {
-    class tlv_tree : public tree<tlv>
-    {
-    };
+    using tlv_tree_node = tree_node<tlv>;
 }
