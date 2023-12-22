@@ -1,9 +1,22 @@
 #pragma once
 
-#include "tree_node.h"
+#include "tree.h"
 #include "tlv.h"
 
 namespace ka
 {
-    using tlv_tree_node = tree_node<tlv>;
+    template <>
+    class tree_node<tlv> : public _tree_node<tlv>
+    {
+    public:
+        bool serialize()
+        {
+            return false;
+        }
+
+        bool deserialize()
+        {
+            return false;
+        }
+    };
 }

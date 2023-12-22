@@ -9,18 +9,18 @@
 namespace ka
 {
     template <typename T>
-    class tree_node
+    class _tree_node
     {
     public:
         template <typename... Args>
-        tree_node(Args &&...args) : m_parent(nullptr),
-                                    m_data(std::forward<Args>(args)...)
+        _tree_node(Args &&...args) : m_parent(nullptr),
+                                     m_data(std::forward<Args>(args)...)
         {
         }
 
         template <typename... Args>
-        tree_node(tree_node *parent, Args &&...args) : m_parent(parent),
-                                                       m_data(std::forward<Args>(args)...)
+        _tree_node(_tree_node *parent, Args &&...args) : m_parent(parent),
+                                                         m_data(std::forward<Args>(args)...)
         {
         }
 
@@ -35,7 +35,7 @@ namespace ka
         }
 
         template <typename... Args>
-        tree_node<T> &add_child(Args &&...args)
+        _tree_node<T> &add_child(Args &&...args)
         {
             return m_children.emplace_back(this, std::forward<Args>(args)...);
         }
@@ -46,7 +46,7 @@ namespace ka
             {
                 auto current_node = std::find_if(m_parent->m_children.begin(),
                                                  m_parent->m_children.end(),
-                                                 [this](const tree_node &node)
+                                                 [this](const _tree_node &node)
                                                  { return &node == this; });
 
                 m_parent->m_children.erase(current_node);
@@ -62,7 +62,7 @@ namespace ka
 
         void dump(const size_t &indentation = 0, std::ostream &stream = std::cout) const
         {
-            std::function<void(const tree_node &, size_t)> dump_recursive = [&](const tree_node &node, const size_t &indentation)
+            std::function<void(const _tree_node &, size_t)> dump_recursive = [&](const _tree_node &node, const size_t &indentation)
             {
                 stream << std::setw(static_cast<int>(indentation) + 1) << node.m_data << '\n';
 
@@ -74,8 +74,13 @@ namespace ka
         }
 
     private:
-        tree_node *m_parent;
+        _tree_node *m_parent;
         T m_data;
-        std::list<tree_node> m_children;
+        std::list<_tree_node> m_children;
+    };
+
+    template <typename T>
+    class tree_node : public _tree_node<T>
+    {
     };
 }
