@@ -3,7 +3,7 @@
 
 int main()
 {
-    ka::tree_node<ka::tlv> tlvt;
+    ka::tlv_tree_node tlvt;
 
     auto &l11 = tlvt.add_child(0b00100001U);
     auto &l12 = tlvt.add_child(0b00100010U);
@@ -23,7 +23,7 @@ int main()
     std::cout << "serialized:\n";
     ka::hexdump(buffer.data(), buffer.size());
 
-    ka::tree_node<ka::tlv> tlvt2;
+    ka::tlv_tree_node tlvt2;
 
     tlvt2.deserialize(buffer);
 

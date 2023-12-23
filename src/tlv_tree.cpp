@@ -1,6 +1,7 @@
-#include "tlv_tree.h"
-
 #include <cstring>
+#include <assert.h>
+
+#include "tlv_tree.h"
 
 namespace ka
 {
@@ -78,7 +79,7 @@ namespace ka
         return length_of_length + 1;
     }
 
-    static length_t node_length_recursive(const _tree_node<tlv> &node)
+    static length_t node_length_recursive(const tlv_tree_node &node)
     {
         const ka::tlv &tlv = node.data();
         length_t size = 0;
@@ -99,7 +100,7 @@ namespace ka
         return size;
     }
 
-    static length_t node_length(const _tree_node<tlv> &node)
+    static length_t node_length(const tlv_tree_node &node)
     {
         const ka::tlv &tlv = node.data();
 
@@ -181,7 +182,7 @@ namespace ka
         return true;
     }
 
-    static bool serialize_recursive(const _tree_node<tlv> &node, std::vector<uint8_t> &buffer)
+    static bool serialize_recursive(const tlv_tree_node &node, std::vector<uint8_t> &buffer)
     {
         const ka::tlv &tlv = node.data();
 
@@ -204,6 +205,7 @@ namespace ka
         return true;
     }
 
+    template <>
     bool tree_node<ka::tlv>::serialize(std::vector<uint8_t> &buffer) const
     {
         if (data().tag())
@@ -219,169 +221,150 @@ namespace ka
         return true;
     }
 
-    bool tree_node<ka::tlv>::deserialize(const std::vector<uint8_t> &buffer) const
+    static bool deserialize_tag(const uint8_t *&buffer, size_t &remaining_size, tag_t &tag)
     {
-        (void)buffer;
+        if (!remaining_size)
+            return false;
 
-        return false;
+        size_t index = 0;
+        tag_t _tag = buffer[index++];
+
+        if (!_tag)
+            return false;
+
+        if ((_tag & 0b00011111) != 0b00011111)
+        {
+            buffer += index;
+            remaining_size -= index;
+            tag = _tag;
+
+            return true;
+        }
+
+        do
+        {
+            if ((index >= remaining_size) || index >= sizeof(tag_t))
+                return false;
+
+            _tag = (_tag << 8) | buffer[index++];
+        } while (_tag & 0b10000000);
+
+        buffer += index;
+        remaining_size -= index;
+        tag = _tag;
+
+        return true;
+    }
+
+    static bool deserialize_length(const uint8_t *&buffer, size_t &remaining_size, length_t &length)
+    {
+        if (!remaining_size)
+            return false;
+
+        size_t index = 0;
+        length_t _length = buffer[index++];
+
+        if (!(_length & 0b10000000))
+        {
+            buffer += 1;
+            remaining_size -= 1;
+            length = _length & 0b01111111;
+
+            return true;
+        }
+
+        uint8_t length_of_length = _length & 0b01111111;
+
+        assert(length_of_length);
+
+        if ((length_of_length + 1U > remaining_size) || (length_of_length > sizeof(length_t)))
+            return false;
+
+        _length = 0;
+
+        for (size_t i = 0; i < length_of_length; i++)
+            _length = (_length << 8) | buffer[index++];
+
+        buffer += index;
+        remaining_size -= index;
+        length = _length;
+
+        return true;
+    }
+
+    static bool deserialize_recursive(const uint8_t *&buffer, size_t &remaining_size, tlv_tree_node &node)
+    {
+        while (remaining_size)
+        {
+            tag_t tag = 0;
+
+            if (!deserialize_tag(buffer, remaining_size, tag))
+                return false;
+
+            length_t length = 0;
+
+            if (!deserialize_length(buffer, remaining_size, length))
+                return false;
+
+            if (length > remaining_size)
+                return false;
+
+            if (tag_is_primitive(tag))
+            {
+                node.add_child(tag, length, buffer);
+
+                buffer += length;
+                remaining_size -= length;
+            }
+            else
+            {
+                auto &child = node.add_child(tag, 0, nullptr);
+
+                size_t _remaining_size = length;
+
+                if (!deserialize_recursive(buffer, _remaining_size, child))
+                    return false;
+
+                remaining_size -= length;
+            }
+        }
+
+        return true;
+    }
+
+    template <>
+    bool tree_node<ka::tlv>::deserialize(const std::vector<uint8_t> &buffer)
+    {
+        const uint8_t *data = buffer.data();
+        size_t remaining_size = buffer.size();
+
+        if (!deserialize_recursive(data, remaining_size, *this))
+            return false;
+
+        // if (is_root_injected)
+        // {
+        //     tp_tree_t *_tree = tree;
+        //     tp_tree_node_t *_node = node;
+
+        //     if (tp_list_size(_node->children) < 2)
+        //     {
+        //         tp_list_node_t *child = _node->children->first;
+
+        //         if (child)
+        //         {
+        //             _tree->root = child->data;
+        //             _tree->root->parent = NULL;
+        //         }
+        //         else
+        //             _tree->root = NULL;
+
+        //         _tree->mem_deallocator(_node->data);
+        //         tp_list_destroy(_node->children);
+
+        //         _tree->mem_deallocator(_node);
+        //     }
+        // }
+
+        return true;
     }
 };
-
-// refrence implementation of C version
-
-// static bool tp_tlv_tree_deserialize_tag(const uint8_t **buffer, size_t *remaining_size, tp_tlv_tag_t *tag)
-// {
-//     if (!*remaining_size)
-//         return false;
-
-//     size_t index = 0;
-//     tp_tlv_tag_t _tag = (*buffer)[index++];
-
-//     if (!tag)
-//         return false;
-
-//     if ((_tag & 0b00011111) != 0b00011111)
-//     {
-//         (*buffer) += index;
-//         *remaining_size -= index;
-//         *tag = _tag;
-
-//         return true;
-//     }
-
-//     do
-//     {
-//         if ((index >= *remaining_size) || index >= sizeof(tp_tlv_tag_t))
-//             return false;
-
-//         _tag = (_tag << 8) | (*buffer)[index++];
-//     } while (_tag & 0b10000000);
-
-//     (*buffer) += index;
-//     *remaining_size -= index;
-//     *tag = _tag;
-
-//     return true;
-// }
-
-// static bool tp_tlv_tree_deserialize_length(const uint8_t **buffer, size_t *remaining_size, tp_tlv_length_t *length)
-// {
-//     if (!*remaining_size)
-//         return false;
-
-//     size_t index = 0;
-//     tp_tlv_length_t _length = (*buffer)[index++];
-
-//     if (!(_length & 0b10000000))
-//     {
-//         (*buffer) += 1;
-//         *remaining_size -= 1;
-//         *length = _length & 0b01111111;
-
-//         return true;
-//     }
-
-//     uint8_t length_of_length = _length & 0b01111111;
-
-//     _assert(length_of_length, "[common::tlv_tree::deserialize_length] deserializing length in indefinite form is not supported.");
-
-//     if ((length_of_length + 1 > *remaining_size) || (length_of_length > sizeof(tp_tlv_length_t)))
-//         return false;
-
-//     _length = 0;
-
-//     for (size_t i = 0; i < length_of_length; i++)
-//         _length = (_length << 8) | (*buffer)[index++];
-
-//     (*buffer) += index;
-//     *remaining_size -= index;
-//     *length = _length;
-
-//     return true;
-// }
-
-// static bool tp_tlv_tree_deserialize_recursive(const uint8_t **buffer, size_t *remaining_size, tp_tlv_tree_t *tree, tp_tlv_tree_node_t *node)
-// {
-//     while (*remaining_size)
-//     {
-//         tp_tlv_tag_t tag = 0;
-
-//         if (!tp_tlv_tree_deserialize_tag(buffer, remaining_size, &tag))
-//             return false;
-
-//         tp_tlv_length_t length = 0;
-
-//         if (!tp_tlv_tree_deserialize_length(buffer, remaining_size, &length))
-//             return false;
-
-//         if (length > *remaining_size)
-//             return false;
-
-//         if (tp_tlv_tree_tag_is_primitive(tag))
-//         {
-//             tp_tlv_tree_add_node(tree, node, tag, length, *buffer);
-
-//             (*buffer) += length;
-//             *remaining_size -= length;
-//         }
-//         else
-//         {
-//             tp_tlv_tree_node_t *child = tp_tlv_tree_add_node(tree, node, tag, 0, NULL);
-
-//             size_t _remaining_size = length;
-
-//             if (!tp_tlv_tree_deserialize_recursive(buffer, &_remaining_size, tree, child))
-//                 return false;
-
-//             *remaining_size -= length;
-//         }
-//     }
-
-//     return true;
-// }
-
-// bool tp_tlv_tree_deserialize(const uint8_t *buffer, const size_t size, tp_tlv_tree_t *tree, tp_tlv_tree_node_t *node)
-// {
-//     if (!buffer || !tree)
-//         return false;
-
-//     bool is_root_injected = false;
-
-//     if (!node)
-//     {
-//         node = tp_tlv_tree_add_node(tree, tp_tlv_tree_get_root(tree), 0, 0, NULL);
-
-//         is_root_injected = true;
-//     }
-
-//     size_t remaining_size = size;
-
-//     if (!tp_tlv_tree_deserialize_recursive(&buffer, &remaining_size, tree, node))
-//         return false;
-
-//     if (is_root_injected)
-//     {
-//         tp_tree_t *_tree = tree;
-//         tp_tree_node_t *_node = node;
-
-//         if (tp_list_size(_node->children) < 2)
-//         {
-//             tp_list_node_t *child = _node->children->first;
-
-//             if (child)
-//             {
-//                 _tree->root = child->data;
-//                 _tree->root->parent = NULL;
-//             }
-//             else
-//                 _tree->root = NULL;
-
-//             _tree->mem_deallocator(_node->data);
-//             tp_list_destroy(_node->children);
-
-//             _tree->mem_deallocator(_node);
-//         }
-//     }
-
-//     return true;
-// }
