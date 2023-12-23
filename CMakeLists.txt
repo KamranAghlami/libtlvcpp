@@ -4,7 +4,11 @@ project(tlvcpp LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_compile_options(-Wall -Werror -Wextra -Wpedantic -Wconversion)
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    add_compile_options(-Wall -Werror -Wextra -Wpedantic -Wconversion)
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    add_compile_options(/W4 /WX)
+endif()
 
 file(GLOB_RECURSE SOURCES "src/*.h" "src/*.cpp")
 
