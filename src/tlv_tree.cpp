@@ -14,7 +14,7 @@ namespace ka
 
         tag_bytes.tag = tag;
 
-        for (ssize_t i = sizeof(tag_t) - 1; i > -1; i--)
+        for (size_t i = sizeof(tag_t) - 1; i != static_cast<std::size_t>(-1); i--)
             if (tag_bytes.byte[i])
                 return !(tag_bytes.byte[i] & 0b00100000);
 
@@ -129,7 +129,7 @@ namespace ka
 
         tag_bytes.tag = tag;
 
-        for (ssize_t i = length - 1; i > -1; i--)
+        for (size_t i = length - 1; i != static_cast<std::size_t>(-1); i--)
             buffer.push_back(tag_bytes.byte[i]);
 
         return true;
@@ -154,7 +154,7 @@ namespace ka
 
         uint8_t length_of_length = sizeof(length_t);
 
-        for (ssize_t i = sizeof(length_t) - 1; i > -1; i--)
+        for (size_t i = sizeof(length_t) - 1; i != static_cast<std::size_t>(-1); i--)
             if (!length_bytes.byte[i])
                 length_of_length--;
             else
@@ -165,9 +165,9 @@ namespace ka
 
         buffer.push_back(length_of_length | 0b10000000);
 
-        ssize_t byte_index = length_of_length - 1;
+        size_t byte_index = length_of_length - 1;
 
-        while (byte_index > -1)
+        while (byte_index != static_cast<std::size_t>(-1))
             buffer.push_back(length_bytes.byte[byte_index--]);
 
         return true;
