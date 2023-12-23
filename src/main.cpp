@@ -22,4 +22,11 @@ int main()
 
     std::cout << "serialized:\n";
     ka::hexdump(buffer.data(), buffer.size());
+
+    ka::tree_node<ka::tlv> tlvt2;
+
+    tlvt2.deserialize(buffer);
+
+    std::cout << "deserialized:\n";
+    tlvt2.dump();
 }
