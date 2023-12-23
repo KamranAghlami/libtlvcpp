@@ -119,7 +119,7 @@ namespace ka
         if (!tag)
             return false;
 
-        size_t length = length_of_tag(tag);
+        length_t length = length_of_tag(tag);
 
         union
         {

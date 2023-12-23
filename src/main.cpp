@@ -5,8 +5,8 @@ int main()
 {
     ka::tree_node<ka::tlv> tlvt;
 
-    auto &l11 = tlvt.add_child(0b00100001);
-    auto &l12 = tlvt.add_child(0b00100010);
+    auto &l11 = tlvt.add_child(0b00100001U);
+    auto &l12 = tlvt.add_child(0b00100010U);
 
     l11.add_child(1U, "Hello, world!");
     l11.add_child(2U, "0123456789abcdefABCDEF");
