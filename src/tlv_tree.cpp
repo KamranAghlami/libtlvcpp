@@ -336,34 +336,13 @@ namespace ka
     bool tree_node<ka::tlv>::deserialize(const std::vector<uint8_t> &buffer)
     {
         const uint8_t *data = buffer.data();
-        size_t remaining_size = buffer.size();
+        size_t size = buffer.size();
 
-        if (!deserialize_recursive(data, remaining_size, *this))
+        if (!deserialize_recursive(data, size, *this))
             return false;
 
-        // if (is_root_injected)
-        // {
-        //     tp_tree_t *_tree = tree;
-        //     tp_tree_node_t *_node = node;
-
-        //     if (tp_list_size(_node->children) < 2)
-        //     {
-        //         tp_list_node_t *child = _node->children->first;
-
-        //         if (child)
-        //         {
-        //             _tree->root = child->data;
-        //             _tree->root->parent = NULL;
-        //         }
-        //         else
-        //             _tree->root = NULL;
-
-        //         _tree->mem_deallocator(_node->data);
-        //         tp_list_destroy(_node->children);
-
-        //         _tree->mem_deallocator(_node);
-        //     }
-        // }
+        if (this->data().tag() == 0 && children().size() == 1)
+            *this = children().front();
 
         return true;
     }
