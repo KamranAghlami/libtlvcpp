@@ -318,7 +318,7 @@ namespace ka
             }
             else
             {
-                auto &child = node.add_child(tag, 0, nullptr);
+                auto &child = node.add_child(tag, 0U, nullptr);
 
                 size_t _remaining_size = length;
 
