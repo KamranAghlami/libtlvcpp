@@ -342,7 +342,7 @@ namespace ka
             return false;
 
         if (this->data().tag() == 0 && children().size() == 1)
-            *this = children().front();
+            *this = std::move(children().front());
 
         return true;
     }
