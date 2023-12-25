@@ -60,6 +60,26 @@ namespace ka
             return m_parent;
         }
 
+        bool is_child_of(const tree_node &other) const
+        {
+            const auto *parent = m_parent;
+
+            while (parent)
+            {
+                if (parent == &other)
+                    return true;
+
+                parent = parent->parent();
+            }
+
+            return false;
+        }
+
+        bool is_parent_of(const tree_node &other) const
+        {
+            return other.is_child_of(*this);
+        }
+
         size_t depth() const
         {
             size_t d = 0;
