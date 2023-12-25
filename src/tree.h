@@ -25,6 +25,11 @@ namespace ka
         {
         }
 
+        tree_node(const tree_node &other) = default;
+        tree_node &operator=(const tree_node &other) = default;
+        tree_node(tree_node &&other) noexcept = default;
+        tree_node &operator=(tree_node &&other) noexcept = default;
+
         const tree_node &root() const
         {
             const auto root = this;
