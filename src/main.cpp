@@ -3,21 +3,21 @@
 
 int main()
 {
-    ka::tlv_tree_node tlvt(0b00100000U | 0x00);
+    ka::tlv_tree_node tlvt(0b00100000U | 0x00U);
 
-    auto &n1 = tlvt.add_child(0b00100000U | 0x01);
-    tlvt.add_child(0x02);
-    auto &n3 = tlvt.add_child(0b00100000U | 0x03);
+    auto &n1 = tlvt.add_child(0b00100000U | 0x01U);
+    tlvt.add_child(0x02U);
+    auto &n3 = tlvt.add_child(0b00100000U | 0x03U);
 
-    n1.add_child(0x04);
-    n1.add_child(0x05);
+    n1.add_child(0x04U);
+    n1.add_child(0x05U);
 
-    n3.add_child(0x06);
-    auto &n7 = n3.add_child(0b00100000U | 0x07);
+    n3.add_child(0x06U);
+    auto &n7 = n3.add_child(0b00100000U | 0x07U);
 
-    n7.add_child(0x08);
-    n7.add_child(0x09);
-    n7.add_child(0x0A);
+    n7.add_child(0x08U);
+    n7.add_child(0x09U);
+    n7.add_child(0x0AU);
 
     std::cout << "tree:\n";
     tlvt.dump();
