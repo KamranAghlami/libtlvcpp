@@ -97,26 +97,6 @@ namespace ka
             return m_children.emplace_back(this, std::forward<Args>(args)...);
         }
 
-        void erase()
-        {
-            if (m_parent)
-            {
-                auto current_node = std::find_if(m_parent->m_children.begin(),
-                                                 m_parent->m_children.end(),
-                                                 [this](const tree_node &node)
-                                                 { return &node == this; });
-
-                m_parent->m_children.erase(current_node);
-            }
-            else
-            {
-                m_children.clear();
-
-                m_data.~T();
-                new (&m_data) T();
-            }
-        }
-
         bool serialize(std::vector<uint8_t> &buffer) const;
         bool deserialize(const std::vector<uint8_t> &buffer);
 
