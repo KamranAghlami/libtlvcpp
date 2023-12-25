@@ -29,7 +29,6 @@ int main()
     ka::hexdump(buffer.data(), buffer.size());
 
     ka::tlv_tree_node tlvt2;
-
     tlvt2.deserialize(buffer);
 
     std::cout << "deserialized:\n";
