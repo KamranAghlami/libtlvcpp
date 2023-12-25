@@ -25,6 +25,26 @@ namespace ka
         {
         }
 
+        const tree_node &root() const
+        {
+            const auto root = this;
+
+            while (root->parent())
+                root = root->parent();
+
+            return *root;
+        }
+
+        tree_node &root()
+        {
+            auto root = this;
+
+            while (root->parent())
+                root = root->parent();
+
+            return *root;
+        }
+
         const tree_node *parent() const
         {
             return m_parent;
@@ -33,6 +53,22 @@ namespace ka
         tree_node *parent()
         {
             return m_parent;
+        }
+
+        size_t depth() const
+        {
+            size_t d = 0;
+
+            const auto node = this;
+
+            while (node->parent())
+            {
+                node = node->parent();
+
+                d++;
+            }
+
+            return d;
         }
 
         const T &data() const
