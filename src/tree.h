@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cassert>
 #include <utility>
 #include <list>
 #include <vector>
@@ -34,7 +35,7 @@ namespace ka
 
         tree_node(tree_node &other) : tree_node(const_cast<const tree_node &>(other)){};
 
-        tree_node &operator=(const tree_node &other) = default;
+        tree_node &operator=(const tree_node &other) = delete;
         // {
         //     if (this == &other)
         //         return *this;
@@ -53,13 +54,30 @@ namespace ka
                 child.m_parent = this;
         };
 
-        tree_node &operator=(tree_node &&other) noexcept = default;
-        // {
-        //     if (this == &other)
-        //         return *this;
+        tree_node &operator=(tree_node &&other) noexcept
+        {
+            if (this == &other)
+                return *this;
 
-        //     return *this;
-        // };
+            assert(!other.is_parent_of(*this));
+
+            m_data = std::move(other.m_data);
+
+            if (is_parent_of(other))
+                m_children = std::move(std::list<tree_node>(std::move(other.m_children)));
+            else
+            {
+                m_children = std::move(other.m_children);
+
+                if (other.m_parent)
+                    other.parent()->prune(other);
+            }
+
+            for (auto &child : m_children)
+                child.m_parent = this;
+
+            return *this;
+        };
 
         const tree_node &root() const
         {
