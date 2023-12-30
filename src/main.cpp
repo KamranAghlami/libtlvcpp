@@ -1,5 +1,6 @@
-#include "tlv_tree.h"
 #include "utilities/hexdump.h"
+#include "utilities/scoped_timer.h"
+#include "tlv_tree.h"
 
 int main()
 {
@@ -23,13 +24,23 @@ int main()
     tlvt.dump();
 
     std::vector<uint8_t> buffer;
-    tlvt.serialize(buffer);
+
+    {
+        scoped_timer t("serialize");
+
+        tlvt.serialize(buffer);
+    }
 
     std::cout << "serialized:\n";
     ka::hexdump(buffer.data(), buffer.size());
 
     ka::tlv_tree_node tlvt2;
-    tlvt2.deserialize(buffer);
+
+    {
+        scoped_timer t("deserialize");
+
+        tlvt2.deserialize(buffer);
+    }
 
     std::cout << "deserialized:\n";
     tlvt2.dump();
