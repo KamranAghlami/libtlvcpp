@@ -180,6 +180,8 @@ namespace ka
 
         void graft(const tree_node &node)
         {
+            assert(this != &node && !node.is_parent_of(*this));
+
             auto &grafted_child = add_child(node.m_data);
 
             for (const auto &child : node.m_children)
