@@ -1,13 +1,14 @@
 #pragma once
 
 #include <cassert>
-#include <utility>
-#include <list>
-#include <vector>
-#include <queue>
+#include <cstdint>
 #include <functional>
-#include <iostream>
 #include <iomanip>
+#include <iostream>
+#include <list>
+#include <queue>
+#include <utility>
+#include <vector>
 
 namespace ka
 {

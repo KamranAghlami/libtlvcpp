@@ -2,9 +2,9 @@
 
 #include <cstring>
 
-#include "utilities/iostream_state_guard.h"
-#include "utilities/hexdump.h"
 #include "limits"
+#include "utilities/hexdump.h"
+#include "utilities/iostream_state_guard.h"
 
 namespace ka
 {
