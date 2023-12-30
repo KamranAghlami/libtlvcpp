@@ -4,6 +4,7 @@
 #include <utility>
 #include <list>
 #include <vector>
+#include <queue>
 #include <functional>
 #include <iostream>
 #include <iomanip>
@@ -116,26 +117,6 @@ namespace ka
             return m_parent;
         }
 
-        bool is_child_of(const tree_node &other) const
-        {
-            const auto *parent = m_parent;
-
-            while (parent)
-            {
-                if (parent == &other)
-                    return true;
-
-                parent = parent->parent();
-            }
-
-            return false;
-        }
-
-        bool is_parent_of(const tree_node &other) const
-        {
-            return other.is_child_of(*this);
-        }
-
         size_t depth() const
         {
             size_t d = 0;
@@ -197,6 +178,49 @@ namespace ka
 
             if (child_node != m_children.end())
                 m_children.erase(child_node);
+        }
+
+        template <typename U>
+        T *find(U value, size_t index = 0)
+        {
+            std::queue<tree_node *> queue;
+
+            queue.push(this);
+
+            while (queue.size())
+            {
+                auto node = queue.front();
+
+                queue.pop();
+
+                if (node->m_data == value && !(index--))
+                    return &node->m_data;
+
+                for (auto &child : node->m_children)
+                    queue.push(&child);
+            }
+
+            return nullptr;
+        }
+
+        bool is_child_of(const tree_node &other) const
+        {
+            const auto *parent = m_parent;
+
+            while (parent)
+            {
+                if (parent == &other)
+                    return true;
+
+                parent = parent->parent();
+            }
+
+            return false;
+        }
+
+        bool is_parent_of(const tree_node &other) const
+        {
+            return other.is_child_of(*this);
         }
 
         bool serialize(std::vector<uint8_t> &buffer) const;

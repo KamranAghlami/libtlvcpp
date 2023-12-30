@@ -137,4 +137,9 @@ namespace ka
 
         return stream;
     }
+
+    bool operator==(const tlv &tlv, const tag_t &tag)
+    {
+        return tlv.m_tag == tag;
+    }
 }
