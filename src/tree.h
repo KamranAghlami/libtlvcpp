@@ -203,6 +203,16 @@ namespace ka
             return nullptr;
         }
 
+        template <typename U>
+        T *find_immediate(U value, size_t index = 0)
+        {
+            for (auto &child : m_children)
+                if (child.m_data == value && !(index--))
+                    return &child.m_data;
+
+            return nullptr;
+        }
+
         bool is_child_of(const tree_node &other) const
         {
             const auto *parent = m_parent;
