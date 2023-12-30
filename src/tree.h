@@ -35,13 +35,20 @@ namespace ka
 
         tree_node(tree_node &other) : tree_node(const_cast<const tree_node &>(other)){};
 
-        tree_node &operator=(const tree_node &other) = delete;
-        // {
-        //     if (this == &other)
-        //         return *this;
+        tree_node &operator=(const tree_node &other)
+        {
+            if (this == &other)
+                return *this;
 
-        //     return *this;
-        // };
+            assert(!other.is_parent_of(*this));
+
+            m_data = other.m_data;
+
+            for (const auto &child : other.m_children)
+                graft(child);
+
+            return *this;
+        };
 
         tree_node(tree_node &&other) noexcept : m_parent(nullptr),
                                                 m_data(std::move(other.m_data)),
