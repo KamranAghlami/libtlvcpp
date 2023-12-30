@@ -25,10 +25,37 @@ namespace ka
         {
         }
 
-        tree_node(const tree_node &other) = default;
+        tree_node(const tree_node &other) : m_parent(nullptr),
+                                            m_data(other.m_data)
+        {
+            for (const auto &child : other.m_children)
+                graft(child);
+        };
+
+        tree_node(tree_node &other) : tree_node(const_cast<const tree_node &>(other)){};
+
         tree_node &operator=(const tree_node &other) = default;
-        tree_node(tree_node &&other) noexcept = default;
+        // {
+        //     if (this == &other)
+        //         *this;
+        // };
+
+        tree_node(tree_node &&other) noexcept : m_parent(nullptr),
+                                                m_data(std::move(other.m_data)),
+                                                m_children(std::move(other.m_children))
+        {
+            if (other.m_parent)
+                other.parent()->prune(other);
+
+            for (auto &child : m_children)
+                child.m_parent = this;
+        };
+
         tree_node &operator=(tree_node &&other) noexcept = default;
+        // {
+        //     if (this == &other)
+        //         *this;
+        // };
 
         const tree_node &root() const
         {
@@ -120,6 +147,25 @@ namespace ka
         tree_node<T> &add_child(Args &&...args)
         {
             return m_children.emplace_back(this, std::forward<Args>(args)...);
+        }
+
+        void graft(const tree_node &node)
+        {
+            auto &grafted_child = add_child(node.m_data);
+
+            for (const auto &child : node.m_children)
+                grafted_child.graft(child);
+        }
+
+        void prune(tree_node &node)
+        {
+            auto child_node = std::find_if(m_children.begin(),
+                                           m_children.end(),
+                                           [&node](const tree_node &_node)
+                                           { return &_node == &node; });
+
+            if (child_node != m_children.end())
+                m_children.erase(child_node);
         }
 
         bool serialize(std::vector<uint8_t> &buffer) const;

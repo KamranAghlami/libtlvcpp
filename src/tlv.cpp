@@ -80,16 +80,14 @@ namespace ka
         return *this;
     }
 
-    tlv::tlv(tlv &&other) noexcept : life_time(other)
+    tlv::tlv(tlv &&other) noexcept : life_time(std::move(other))
     {
         m_tag = std::move(other.m_tag);
         m_length = std::move(other.m_length);
-
-        if (m_value)
-            delete[] m_value;
-
         m_value = std::move(other.m_value);
 
+        other.m_tag = 0;
+        other.m_length = 0;
         other.m_value = nullptr;
     }
 
@@ -106,6 +104,8 @@ namespace ka
 
         m_value = std::move(other.m_value);
 
+        other.m_tag = 0;
+        other.m_length = 0;
         other.m_value = nullptr;
 
         return *this;
