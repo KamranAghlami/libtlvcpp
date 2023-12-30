@@ -37,7 +37,9 @@ namespace ka
         tree_node &operator=(const tree_node &other) = default;
         // {
         //     if (this == &other)
-        //         *this;
+        //         return *this;
+
+        //     return *this;
         // };
 
         tree_node(tree_node &&other) noexcept : m_parent(nullptr),
@@ -54,7 +56,9 @@ namespace ka
         tree_node &operator=(tree_node &&other) noexcept = default;
         // {
         //     if (this == &other)
-        //         *this;
+        //         return *this;
+
+        //     return *this;
         // };
 
         const tree_node &root() const
