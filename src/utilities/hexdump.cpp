@@ -1,5 +1,7 @@
 #include "hexdump.h"
 
+#include <cstdint>
+
 #include "iostream_state_guard.h"
 
 namespace ka
