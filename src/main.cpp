@@ -46,7 +46,7 @@ int main()
     {
         scoped_timer t("deserialize");
 
-        deserialized = tlvt.deserialize(buffer);
+        deserialized = tlvt2.deserialize(buffer);
     }
 
     if (deserialized)
