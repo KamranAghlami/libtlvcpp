@@ -124,16 +124,14 @@ namespace ka
                    << tlv.m_tag;
         }
 
-        stream << ", length: " << tlv.m_length << ", value:";
-
         if (tlv.m_length)
         {
-            stream << '\n';
+            stream << ", length: " << tlv.m_length << ", value:\n";
 
             hexdump(tlv.m_value, tlv.m_length, width + 4, stream);
         }
         else
-            stream << " " << nullptr << '\n';
+            stream << '\n';
 
         return stream;
     }
