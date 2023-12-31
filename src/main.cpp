@@ -24,24 +24,36 @@ int main()
     tlvt.dump();
 
     std::vector<uint8_t> buffer;
+    bool serialized = false;
 
     {
         scoped_timer t("serialize");
 
-        tlvt.serialize(buffer);
+        serialized = tlvt.serialize(buffer);
     }
 
-    std::cout << "serialized:\n";
-    ka::hexdump(buffer.data(), buffer.size());
+    if (serialized)
+    {
+        std::cout << "serialized:\n";
+        ka::hexdump(buffer.data(), buffer.size());
+    }
+    else
+        std::cout << "serialization failed!\n";
 
     ka::tlv_tree_node tlvt2;
+    bool deserialized = false;
 
     {
         scoped_timer t("deserialize");
 
-        tlvt2.deserialize(buffer);
+        deserialized = tlvt.deserialize(buffer);
     }
 
-    std::cout << "deserialized:\n";
-    tlvt2.dump();
+    if (deserialized)
+    {
+        std::cout << "deserialized:\n";
+        tlvt2.dump();
+    }
+    else
+        std::cout << "deserialization failed!\n";
 }
