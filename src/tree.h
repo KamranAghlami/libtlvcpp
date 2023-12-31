@@ -182,6 +182,12 @@ namespace ka
         }
 
         template <typename U>
+        const T *find(U value, size_t index = 0) const
+        {
+            return find(value, index);
+        }
+
+        template <typename U>
         T *find(U value, size_t index = 0)
         {
             std::queue<tree_node *> queue;
@@ -202,6 +208,12 @@ namespace ka
             }
 
             return nullptr;
+        }
+
+        template <typename U>
+        const T *find_immediate(U value, size_t index = 0) const
+        {
+            return find_immediate(value, index);
         }
 
         template <typename U>
