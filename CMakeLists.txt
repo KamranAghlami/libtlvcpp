@@ -12,7 +12,7 @@ endif()
 
 file(GLOB_RECURSE SOURCES "src/*.h" "src/*.cpp")
 
-add_executable(${PROJECT_NAME} ${SOURCES})
+add_library(${PROJECT_NAME} ${SOURCES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC include PRIVATE src)
 
