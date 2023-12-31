@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-namespace ka
+namespace tlvcpp
 {
     life_time::life_time(const std::string &name) : m_name(name)
     {

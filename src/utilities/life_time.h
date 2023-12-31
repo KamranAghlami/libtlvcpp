@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace ka
+namespace tlvcpp
 {
     class life_time
     {

@@ -3,7 +3,7 @@
 #include "tlv.h"
 #include "tree.h"
 
-namespace ka
+namespace tlvcpp
 {
     using tlv_tree_node = tree_node<tlv>;
 }

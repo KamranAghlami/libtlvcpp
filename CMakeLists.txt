@@ -14,6 +14,6 @@ file(GLOB_RECURSE SOURCES "src/*.h" "src/*.cpp")
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-target_include_directories(${PROJECT_NAME} PRIVATE src)
+target_include_directories(${PROJECT_NAME} PUBLIC include PRIVATE src)
 
 include(cmake/test.cmake)

@@ -22,14 +22,14 @@
 
 ```cpp
 // Create a TLV tree node
-ka::tlv_tree_node root;
+tlvcpp::tlv_tree_node root;
 
 // Add TLV elements to the tree
-root.add_child(ka::tlv(1, "Value1"));
-auto& childNode = root.add_child(ka::tlv(2, "Value2"));
+root.add_child(tlvcpp::tlv(1, "Value1"));
+auto& childNode = root.add_child(tlvcpp::tlv(2, "Value2"));
 
 // Add child elements to a node
-childNode.add_child(ka::tlv(3, "Value3"));
+childNode.add_child(tlvcpp::tlv(3, "Value3"));
 
 // Dump the tree structure
 root.dump();
@@ -43,7 +43,7 @@ std::vector<uint8_t> buffer;
 root.serialize(buffer);
 
 // Deserialize the TLV tree from a vector
-ka::tlv_tree_node newRoot;
+tlvcpp::tlv_tree_node newRoot;
 newRoot.deserialize(buffer);
 ```
 
@@ -51,10 +51,10 @@ newRoot.deserialize(buffer);
 
 ```cpp
 // Find a TLV element by tag
-ka::tlv* foundElement = root.find(2);
+tlvcpp::tlv* foundElement = root.find(2);
 
 // Find an immediate child TLV element by tag
-ka::tlv* foundImmediateElement = root.find_immediate(2);
+tlvcpp::tlv* foundImmediateElement = root.find_immediate(2);
 ```
 
 ## Build Process

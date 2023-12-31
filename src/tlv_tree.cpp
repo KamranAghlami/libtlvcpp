@@ -1,9 +1,9 @@
 #include <assert.h>
 #include <cstring>
 
-#include "tlv_tree.h"
+#include "tlvcpp/tlv_tree.h"
 
-namespace ka
+namespace tlvcpp
 {
     static bool tag_is_primitive(tag_t tag)
     {
@@ -81,7 +81,7 @@ namespace ka
 
     static length_t node_length_recursive(const tlv_tree_node &node)
     {
-        const ka::tlv &tlv = node.data();
+        const tlvcpp::tlv &tlv = node.data();
         length_t size = 0;
 
         size += length_of_tag(tlv.tag());
@@ -102,7 +102,7 @@ namespace ka
 
     static length_t node_length(const tlv_tree_node &node)
     {
-        const ka::tlv &tlv = node.data();
+        const tlvcpp::tlv &tlv = node.data();
 
         if (tag_is_primitive(tlv.tag()))
             return tlv.length();
@@ -184,7 +184,7 @@ namespace ka
 
     static bool serialize_recursive(const tlv_tree_node &node, std::vector<uint8_t> &buffer)
     {
-        const ka::tlv &tlv = node.data();
+        const tlvcpp::tlv &tlv = node.data();
 
         if (!serialize_tag(tlv.tag(), buffer))
             return false;
@@ -206,7 +206,7 @@ namespace ka
     }
 
     template <>
-    bool tree_node<ka::tlv>::serialize(std::vector<uint8_t> &buffer) const
+    bool tree_node<tlvcpp::tlv>::serialize(std::vector<uint8_t> &buffer) const
     {
         if (data().tag())
         {
@@ -333,7 +333,7 @@ namespace ka
     }
 
     template <>
-    bool tree_node<ka::tlv>::deserialize(const std::vector<uint8_t> &buffer)
+    bool tree_node<tlvcpp::tlv>::deserialize(const std::vector<uint8_t> &buffer)
     {
         const uint8_t *data = buffer.data();
         size_t size = buffer.size();

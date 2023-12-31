@@ -4,7 +4,7 @@
 
 #include "iostream_state_guard.h"
 
-namespace ka
+namespace tlvcpp
 {
     void hexdump(const void *data, const size_t &size, const size_t &indentation, std::ostream &stream)
     {
