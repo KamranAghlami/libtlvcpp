@@ -10,32 +10,25 @@ protected:
         const char *buffer = std::get<0>(GetParam());
         const size_t size = std::get<1>(GetParam());
 
-        m_buffer = std::vector<uint8_t>(buffer, buffer + size);
-
-        if (!size)
-            m_buffer.reserve(1);
+        deserialized = std::vector<uint8_t>(buffer, buffer + size);
     }
 
     void TearDown() override
     {
     }
 
-    std::vector<uint8_t> m_buffer;
+    std::vector<uint8_t> deserialized;
     tlvcpp::tlv_tree_node m_tlv_tree;
 };
 
 TEST_P(decode_encode, serialize_deserialize)
 {
-    bool deserialize_ok = m_tlv_tree.deserialize(m_buffer);
-    ASSERT_EQ(deserialize_ok, true);
+    std::vector<uint8_t> serialized;
 
-    std::vector<uint8_t> buffer;
-
-    bool serialize_ok = m_tlv_tree.serialize(buffer);
-    ASSERT_EQ(serialize_ok, true);
-
-    ASSERT_EQ(buffer.size(), m_buffer.size());
-    ASSERT_EQ(memcmp(buffer.data(), m_buffer.data(), m_buffer.size()), 0);
+    ASSERT_TRUE(m_tlv_tree.deserialize(deserialized));
+    ASSERT_TRUE(m_tlv_tree.serialize(serialized));
+    ASSERT_EQ(serialized.size(), deserialized.size());
+    ASSERT_EQ(memcmp(serialized.data(), deserialized.data(), deserialized.size()), 0);
 }
 
 std::vector<std::tuple<const char *, size_t>> cases = {
