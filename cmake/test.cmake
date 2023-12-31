@@ -30,5 +30,3 @@ foreach(SOURCE ${PROJECT_TESTS})
   target_link_libraries(${TEST_TARGET_NAME} PRIVATE ${PROJECT_NAME} gtest gmock)
   gtest_discover_tests(${TEST_TARGET_NAME})
 endforeach()
-
-set_property(DIRECTORY APPEND PROPERTY TEST_INCLUDE_FILES ${CMAKE_CURRENT_LIST_DIR}/ctest.cmake)
