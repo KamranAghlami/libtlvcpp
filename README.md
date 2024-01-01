@@ -13,8 +13,6 @@
 ### Including the Library
 
 ```cpp
-#include "tree.h"
-#include "tlv.h"
 #include "tlv_tree.h"
 ```
 
@@ -25,11 +23,11 @@
 tlvcpp::tlv_tree_node root;
 
 // Add TLV elements to the tree
-root.add_child(tlvcpp::tlv(1, "Value1"));
-auto& childNode = root.add_child(tlvcpp::tlv(2, "Value2"));
+root.add_child(1, "Value1");
+auto& childNode = root.add_child(2, "Value2");
 
 // Add child elements to a node
-childNode.add_child(tlvcpp::tlv(3, "Value3"));
+childNode.add_child(3, "Value3");
 
 // Dump the tree structure
 root.dump();
