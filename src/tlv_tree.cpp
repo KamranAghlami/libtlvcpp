@@ -85,17 +85,14 @@ namespace tlvcpp
         length_t size = 0;
 
         size += length_of_tag(tlv.tag());
-        size += length_of_length(tlv.length());
 
         if (tag_is_primitive(tlv.tag()))
-        {
             size += tlv.length();
+        else
+            for (const auto &child : node.children())
+                size += node_length_recursive(child);
 
-            return size;
-        }
-
-        for (const auto &child : node.children())
-            size += node_length_recursive(child);
+        size += length_of_length(size);
 
         return size;
     }
