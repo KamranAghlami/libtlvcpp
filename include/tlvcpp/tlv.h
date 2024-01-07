@@ -9,6 +9,8 @@ namespace tlvcpp
     using length_t = uint32_t;
     using value_t = uint8_t;
 
+    bool tag_is_primitive(tag_t tag);
+
     class tlv
     {
     public:

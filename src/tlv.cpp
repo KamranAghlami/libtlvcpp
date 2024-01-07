@@ -8,6 +8,23 @@
 
 namespace tlvcpp
 {
+    bool tag_is_primitive(tag_t tag)
+    {
+        union
+        {
+            tag_t tag;
+            uint8_t byte[sizeof(tag_t)];
+        } tag_bytes;
+
+        tag_bytes.tag = tag;
+
+        for (size_t i = sizeof(tag_t) - 1; i != static_cast<std::size_t>(-1); i--)
+            if (tag_bytes.byte[i])
+                return !(tag_bytes.byte[i] & 0b00100000);
+
+        return false;
+    }
+
     tlv::tlv(const tag_t &tag, const length_t &length, const value_t *value) : m_tag(tag),
                                                                                m_length(length),
                                                                                m_value(nullptr)
