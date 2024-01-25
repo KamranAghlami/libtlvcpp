@@ -1,12 +1,13 @@
 # libtlvcpp
 
-`libtlvcpp` is a modern C++ TLV (Tag-Length-Value) tree library with a focus on a clean interface and automatic memory management. The library consists of three main components: `tree_node`, `tlv`, and `tlv_tree_node`. The `tree_node` represents a generic tree structure, `tlv` represents a TLV element, and `tlv_tree_node` is a specialized tree node for TLV elements.
+`libtlvcpp` is a modern C++ ASN.1 tree manipulating & encoding/decoding library with a focus on a clean interface and automatic memory management. The library consists of three main components: `tree_node`, `tlv`, and `tlv_tree_node`. The `tree_node` represents a generic tree structure, `tlv` represents a TLV element, and `tlv_tree_node` is a specialized tree node for TLV elements.
 
 ## Features
 
 - **Clean Interface**: Provides a simple and intuitive interface for working with TLV data structures.
 - **Automatic Memory Management**: Utilizes modern C++ features to handle memory management automatically.
 - **Flexible Tree Structure**: The `tree_node` class allows you to create a flexible tree structure for organizing TLV elements.
+- **Works on**: Windows, Linux, macOS, ESP-IDF, and Webassembly using Emscripten.
 
 ## Usage
 
