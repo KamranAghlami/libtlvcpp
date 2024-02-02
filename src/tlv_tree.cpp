@@ -332,8 +332,8 @@ namespace tlvcpp
     }
 
     template <>
-    bool tree_node<tlvcpp::tlv>::deserialize(const std::vector<uint8_t> &buffer, const size_t bytes_to_read)
+    bool tree_node<tlvcpp::tlv>::deserialize(const std::vector<uint8_t> &buffer)
     {
-        return deserialize(buffer.data(), std::min(buffer.size(), bytes_to_read));
+        return deserialize(buffer.data(), buffer.size());
     }
 };
