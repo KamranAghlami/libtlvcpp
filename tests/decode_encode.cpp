@@ -21,7 +21,17 @@ protected:
     tlvcpp::tlv_tree_node m_tlv_tree;
 };
 
-TEST_P(decode_encode, serialize_deserialize)
+TEST_P(decode_encode_buffer2vector, serialize_deserialize)
+{
+    std::vector<uint8_t> serialized;
+
+    ASSERT_TRUE(m_tlv_tree.deserialize(deserialized.data(), deserialized.size()));
+    ASSERT_TRUE(m_tlv_tree.serialize(serialized));
+    ASSERT_EQ(serialized.size(), deserialized.size());
+    ASSERT_EQ(memcmp(serialized.data(), deserialized.data(), deserialized.size()), 0);
+}
+
+TEST_P(decode_encode_vector2vector, serialize_deserialize)
 {
     std::vector<uint8_t> serialized;
 
