@@ -318,17 +318,22 @@ namespace tlvcpp
     }
 
     template <>
-    bool tree_node<tlvcpp::tlv>::deserialize(const std::vector<uint8_t> &buffer, const size_t bytes_to_read)
+    bool tree_node<tlvcpp::tlv>::deserialize(const uint8_t *buffer, const size_t size)
     {
-        const uint8_t *data = buffer.data();
-        size_t size = std::min(buffer.size(), bytes_to_read);
+        size_t remaining_size = size;
 
-        if (!deserialize_recursive(data, size, *this))
+        if (!deserialize_recursive(buffer, remaining_size, *this))
             return false;
 
         if (this->data().tag() == 0 && children().size() == 1)
             *this = std::move(children().front());
 
         return true;
+    }
+
+    template <>
+    bool tree_node<tlvcpp::tlv>::deserialize(const std::vector<uint8_t> &buffer, const size_t bytes_to_read)
+    {
+        return deserialize(buffer.data(), std::min(buffer.size(), bytes_to_read));
     }
 };

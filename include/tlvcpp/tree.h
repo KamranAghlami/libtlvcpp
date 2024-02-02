@@ -248,6 +248,7 @@ namespace tlvcpp
         }
 
         bool serialize(std::vector<uint8_t> &buffer, size_t *bytes_written = nullptr) const;
+        bool deserialize(const uint8_t *buffer, const size_t size);
         bool deserialize(const std::vector<uint8_t> &buffer, const size_t bytes_to_read = std::numeric_limits<size_t>::max());
 
         void dump(const size_t &indentation = 0, std::ostream &stream = std::cout) const
