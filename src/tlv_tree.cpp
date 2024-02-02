@@ -186,8 +186,10 @@ namespace tlvcpp
     }
 
     template <>
-    bool tree_node<tlvcpp::tlv>::serialize(std::vector<uint8_t> &buffer) const
+    bool tree_node<tlvcpp::tlv>::serialize(std::vector<uint8_t> &buffer, size_t *bytes_written) const
     {
+        const auto size = buffer.size();
+
         if (data().tag())
         {
             if (!serialize_recursive(*this, buffer))
@@ -197,6 +199,9 @@ namespace tlvcpp
             for (const auto &child : children())
                 if (!serialize_recursive(child, buffer))
                     return false;
+
+        if (bytes_written)
+            *bytes_written = buffer.size() - size;
 
         return true;
     }
@@ -313,10 +318,10 @@ namespace tlvcpp
     }
 
     template <>
-    bool tree_node<tlvcpp::tlv>::deserialize(const std::vector<uint8_t> &buffer)
+    bool tree_node<tlvcpp::tlv>::deserialize(const std::vector<uint8_t> &buffer, const size_t bytes_to_read)
     {
         const uint8_t *data = buffer.data();
-        size_t size = buffer.size();
+        size_t size = std::min(buffer.size(), bytes_to_read);
 
         if (!deserialize_recursive(data, size, *this))
             return false;

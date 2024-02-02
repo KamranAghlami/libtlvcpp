@@ -5,6 +5,7 @@
 #include <functional>
 #include <iomanip>
 #include <iostream>
+#include <limits>
 #include <list>
 #include <queue>
 #include <utility>
@@ -246,8 +247,8 @@ namespace tlvcpp
             return other.is_child_of(*this);
         }
 
-        bool serialize(std::vector<uint8_t> &buffer) const;
-        bool deserialize(const std::vector<uint8_t> &buffer);
+        bool serialize(std::vector<uint8_t> &buffer, size_t *bytes_written = nullptr) const;
+        bool deserialize(const std::vector<uint8_t> &buffer, const size_t bytes_to_read = std::numeric_limits<size_t>::max());
 
         void dump(const size_t &indentation = 0, std::ostream &stream = std::cout) const
         {
