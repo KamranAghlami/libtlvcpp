@@ -1,64 +1,6 @@
-#include <iostream>
-#include <unordered_map>
-
 #include <gtest/gtest.h>
 
 #include "tlvcpp/tlv_tree.h"
-
-std::unordered_map<void *, size_t> allocations;
-size_t total_allocations = 0;
-
-void *operator new(std::size_t size)
-{
-    auto allocated = std::malloc(size);
-
-    total_allocations += size;
-
-    std::cout << " +" << size << ", " << allocated << ", " << total_allocations << " (new)\n";
-
-    allocations[allocated] = size;
-
-    return allocated;
-}
-
-void *operator new[](std::size_t size)
-{
-    auto allocated = std::malloc(size);
-
-    total_allocations += size;
-
-    std::cout << " +" << size << ", " << allocated << ", " << total_allocations << " (new[])\n";
-
-    allocations[allocated] = size;
-
-    return allocated;
-}
-
-void operator delete(void *ptr) noexcept
-{
-    if (!ptr)
-        return;
-
-    auto size = allocations[ptr];
-    total_allocations -= size;
-
-    std::cout << " -" << size << ", " << ptr << ", " << total_allocations << " (delete)\n";
-
-    std::free(ptr);
-}
-
-void operator delete[](void *ptr) noexcept
-{
-    if (!ptr)
-        return;
-
-    auto size = allocations[ptr];
-    total_allocations -= size;
-
-    std::cout << " -" << allocations[ptr] << ", " << ptr << ", " << total_allocations << " (delete[])\n";
-
-    std::free(ptr);
-}
 
 class decode_encode : public ::testing::TestWithParam<std::tuple<const char *, size_t>>
 {
