@@ -8,6 +8,13 @@
 
 namespace tlvcpp
 {
+    static tag_parser g_tag_parser = nullptr;
+
+    void set_tag_parser(tag_parser parser)
+    {
+        g_tag_parser = parser;
+    }
+
     bool tag_is_primitive(tag_t tag)
     {
         union
@@ -133,10 +140,19 @@ namespace tlvcpp
         {
             iostream_state_guard state_guard{stream};
 
-            stream << ""
-                   << "* tag: 0x"
-                   << std::hex << std::setw(2) << std::setfill('0')
-                   << tlv.m_tag;
+            stream << "";
+
+            if (g_tag_parser)
+            {
+                stream << "* tag: "
+                       << g_tag_parser(tlv.m_tag);
+            }
+            else
+            {
+                stream << "* tag: 0x"
+                       << std::hex << std::setw(2) << std::setfill('0')
+                       << tlv.m_tag;
+            }
         }
 
         if (tlv.m_length)

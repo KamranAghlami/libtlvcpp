@@ -8,7 +8,9 @@ namespace tlvcpp
     using tag_t = uint32_t;
     using length_t = uint32_t;
     using value_t = uint8_t;
+    using tag_parser = char *(*)(tag_t);
 
+    void set_tag_parser(tag_parser parser);
     bool tag_is_primitive(tag_t tag);
 
     class tlv
