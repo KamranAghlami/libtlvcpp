@@ -336,4 +336,4 @@ namespace tlvcpp
     {
         return deserialize(buffer.data(), buffer.size());
     }
-};
+}
