@@ -61,6 +61,16 @@ jobs:
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
       run: ctest --build-config ${{ matrix.build_type }}
 
+    - name: GitHubAssistantBot Preprocess (Ubuntu)
+      id: preprocess_commits_ubuntu
+      if: (success() || failure()) && matrix.os == 'ubuntu-latest'
+      run: |
+        commits_json=$(cat <<EOL
+        ${{toJson(github.event.commits)}}
+        EOL
+        )
+        echo "commits=$(echo "$commits_json" | jq -c '[.[] | {message: .message, url: .url}]' || echo "[]")" >> $GITHUB_OUTPUT
+
     - name: GitHubAssistantBot Preprocess (Windows)
       id: preprocess_commits_windows
       if: (success() || failure()) && matrix.os == 'windows-latest'
