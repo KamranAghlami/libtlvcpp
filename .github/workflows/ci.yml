@@ -60,3 +60,48 @@ jobs:
     - name: Test
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
       run: ctest --build-config ${{ matrix.build_type }}
+
+    - name: GitHubAssistantBot Preprocess (Windows)
+      id: preprocess_commits_windows
+      if: (success() || failure()) && matrix.os == 'windows-latest'
+      run: |
+        $commits_json = @"
+        ${{toJson(github.event.commits)}}
+        "@
+
+        $commits = $commits_json | ConvertFrom-Json
+
+        $transformed = $commits | ForEach-Object {
+            [PSCustomObject]@{
+                message = $_.message
+                url     = $_.url
+            }
+        }
+
+        $result_json = $transformed | ConvertTo-Json -Compress
+
+        if (!($result_json -match '^\[')) {
+            $result_json = "[$result_json]"   
+        }
+
+        echo "commits=$result_json" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+
+    - name: GitHubAssistantBot
+      if: success() || failure()
+      uses: fjogeleit/http-request-action@v1
+      with:
+        url: 'https://node-red.geeken.me/github_assistant_bot'
+        data: |
+          {
+            "key": "${{secrets.ASSISTANT_BOT_KEY}}",
+            "actor": "${{github.actor}}",
+            "platform": "${{matrix.os}}-${{matrix.c_compiler}}",
+            "build": "${{matrix.build_type}}",
+            "changes": "https://github.com/${{github.repository}}/commit/${{github.sha}}",
+            "commits": ${{steps.preprocess_commits_ubuntu.outputs.commits || steps.preprocess_commits_windows.outputs.commits}},
+            "event": "${{github.event_name}}",
+            "reference": "${{github.ref_name}}",
+            "report": "https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}",
+            "repository": "${{github.repository}}",
+            "status": "${{job.status}}"
+          }
