@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <cassert>
 #include <cstdint>
 #include <functional>
@@ -10,7 +11,6 @@
 #include <queue>
 #include <utility>
 #include <vector>
-#include <algorithm>
 
 namespace tlvcpp
 {
