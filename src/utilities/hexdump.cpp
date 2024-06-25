@@ -1,8 +1,9 @@
 #include "tlvcpp/utilities/hexdump.h"
 
 #include <cstdint>
+#include <iomanip>
 
-#include "tlvcpp/utilities/iostream_state_guard.h"
+#include "tlvcpp/utilities/stream_guard.h"
 
 namespace tlvcpp
 {
@@ -21,7 +22,7 @@ namespace tlvcpp
                 stream << std::setw(static_cast<int>(indentation)) << "";
 
             {
-                iostream_state_guard state_guard{stream};
+                stream_guard guard{stream};
 
                 stream << std::hex << std::uppercase << std::setw(2) << std::setfill('0') << (int)_data[i] << " ";
             }

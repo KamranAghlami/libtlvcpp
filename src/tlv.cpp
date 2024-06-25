@@ -1,10 +1,11 @@
 #include "tlvcpp/tlv.h"
 
 #include <cstring>
+#include <iomanip>
 
 #include "limits"
 #include "tlvcpp/utilities/hexdump.h"
-#include "tlvcpp/utilities/iostream_state_guard.h"
+#include "tlvcpp/utilities/stream_guard.h"
 
 namespace tlvcpp
 {
@@ -138,7 +139,7 @@ namespace tlvcpp
         const auto width = static_cast<size_t>(stream.width());
 
         {
-            iostream_state_guard state_guard{stream};
+            stream_guard guard{stream};
 
             stream << "";
 
