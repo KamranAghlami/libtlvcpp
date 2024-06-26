@@ -186,7 +186,24 @@ namespace tlvcpp
         template <typename U>
         const tree_node *find(U value, size_t index = 0) const
         {
-            return find(value, index);
+            std::queue<tree_node *> queue;
+
+            queue.push(this);
+
+            while (queue.size())
+            {
+                auto node = queue.front();
+
+                queue.pop();
+
+                if (node->m_data == value && !(index--))
+                    return node;
+
+                for (auto &child : node->m_children)
+                    queue.push(&child);
+            }
+
+            return nullptr;
         }
 
         template <typename U>
@@ -215,7 +232,11 @@ namespace tlvcpp
         template <typename U>
         const tree_node *find_immediate(U value, size_t index = 0) const
         {
-            return find_immediate(value, index);
+            for (auto &child : m_children)
+                if (child.m_data == value && !(index--))
+                    return &child;
+
+            return nullptr;
         }
 
         template <typename U>
