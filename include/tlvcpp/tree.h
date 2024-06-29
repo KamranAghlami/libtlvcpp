@@ -254,14 +254,14 @@ namespace tlvcpp
 
             while (queue.size())
             {
-                auto node = queue.front();
+                const auto node = queue.front();
 
                 queue.pop();
 
                 if (node->m_data == value && !(index--))
                     return const_cast<tree_node *>(node);
 
-                for (auto &child : node->m_children)
+                for (const auto &child : node->m_children)
                     queue.push(&child);
             }
 
@@ -271,7 +271,7 @@ namespace tlvcpp
         template <typename U>
         tree_node *find_immediate_impl(U value, size_t index = 0) const
         {
-            for (auto &child : m_children)
+            for (const auto &child : m_children)
                 if (child.m_data == value && !(index--))
                     return const_cast<tree_node *>(&child);
 
