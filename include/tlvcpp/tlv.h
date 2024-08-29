@@ -34,8 +34,8 @@ namespace tlvcpp
         friend std::ostream &operator<<(std::ostream &stream, const tlv &tlv);
         friend bool operator==(const tlv &tlv, const tag_t &tag);
 
-        const tag_t tag() const { return m_tag; }
-        const length_t length() const { return m_length; }
+        tag_t tag() const { return m_tag; }
+        length_t length() const { return m_length; }
         const value_t *value() const { return m_value; }
 
     private:
