@@ -46,19 +46,15 @@ namespace tlvcpp
     }
 
     template <>
-    tlv::tlv(const tag_t &tag, const std::string_view &&string) : tlv(
-                                                                      tag,
-                                                                      static_cast<length_t>(string.size()),
-                                                                      reinterpret_cast<const value_t *>(string.data()))
+    tlv::tlv(const tag_t &tag, const std::string &&string) : tlv(tag,
+                                                                 static_cast<length_t>(string.size() + 1),
+                                                                 reinterpret_cast<const value_t *>(string.c_str()))
     {
     }
 
-    template <>
-    tlv::tlv(const tag_t &tag, const std::string &&string) : tlv(tag, std::string_view{string})
-    {
-    }
-
-    tlv::tlv(const tag_t &tag, const char *string) : tlv(tag, std::string_view{string})
+    tlv::tlv(const tag_t &tag, const char *string) : tlv(tag,
+                                                         static_cast<length_t>(strlen(string) + 1),
+                                                         reinterpret_cast<const value_t *>(string))
     {
     }
 
