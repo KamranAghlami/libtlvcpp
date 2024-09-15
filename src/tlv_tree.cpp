@@ -5,7 +5,7 @@
 
 namespace tlvcpp
 {
-    static length_t length_of_tag(const tag_t tag)
+    length_t length_of_tag(const tag_t tag)
     {
         union
         {
@@ -32,7 +32,7 @@ namespace tlvcpp
         return length;
     }
 
-    static length_t length_of_length(const length_t length)
+    length_t length_of_length(const length_t length)
     {
         length_t length_of_length = 1;
 
@@ -62,40 +62,7 @@ namespace tlvcpp
         return length_of_length + 1;
     }
 
-    static length_t node_length_recursive(const tlv_tree_node &node)
-    {
-        const tlvcpp::tlv &tlv = node.data();
-        length_t size = 0;
-
-        size += length_of_tag(tlv.tag());
-
-        if (tag_is_primitive(tlv.tag()))
-            size += tlv.length();
-        else
-            for (const auto &child : node.children())
-                size += node_length_recursive(child);
-
-        size += length_of_length(size);
-
-        return size;
-    }
-
-    static length_t node_length(const tlv_tree_node &node)
-    {
-        const tlvcpp::tlv &tlv = node.data();
-
-        if (tag_is_primitive(tlv.tag()))
-            return tlv.length();
-
-        length_t size = 0;
-
-        for (const auto &child : node.children())
-            size += node_length_recursive(child);
-
-        return size;
-    }
-
-    static bool serialize_tag(const tag_t tag, std::vector<uint8_t> &buffer)
+    bool serialize_tag(const tag_t tag, std::vector<uint8_t> &buffer)
     {
         if (!tag)
             return false;
@@ -116,7 +83,7 @@ namespace tlvcpp
         return true;
     }
 
-    static bool serialize_length(const length_t length, std::vector<uint8_t> &buffer)
+    bool serialize_length(const length_t length, std::vector<uint8_t> &buffer)
     {
         if (length < 0b01111111)
         {
@@ -154,7 +121,7 @@ namespace tlvcpp
         return true;
     }
 
-    static bool serialize_value(const uint8_t *value, const size_t size, std::vector<uint8_t> &buffer)
+    bool serialize_value(const uint8_t *value, const size_t size, std::vector<uint8_t> &buffer)
     {
         if (size)
             buffer.insert(buffer.end(), value, value + size);
@@ -162,51 +129,7 @@ namespace tlvcpp
         return true;
     }
 
-    static bool serialize_recursive(const tlv_tree_node &node, std::vector<uint8_t> &buffer)
-    {
-        const tlvcpp::tlv &tlv = node.data();
-
-        if (!serialize_tag(tlv.tag(), buffer))
-            return false;
-
-        if (!serialize_length(node_length(node), buffer))
-            return false;
-
-        if (tag_is_primitive(tlv.tag()))
-        {
-            if (!serialize_value(tlv.value(), tlv.length(), buffer))
-                return false;
-        }
-        else
-            for (const auto &child : node.children())
-                if (!serialize_recursive(child, buffer))
-                    return false;
-
-        return true;
-    }
-
-    template <>
-    bool tree_node<tlvcpp::tlv>::serialize(std::vector<uint8_t> &buffer, size_t *bytes_written) const
-    {
-        const auto size = buffer.size();
-
-        if (data().tag())
-        {
-            if (!serialize_recursive(*this, buffer))
-                return false;
-        }
-        else
-            for (const auto &child : children())
-                if (!serialize_recursive(child, buffer))
-                    return false;
-
-        if (bytes_written)
-            *bytes_written = buffer.size() - size;
-
-        return true;
-    }
-
-    static bool deserialize_tag(const uint8_t *&buffer, size_t &remaining_size, tag_t &tag)
+    bool deserialize_tag(const uint8_t *&buffer, size_t &remaining_size, tag_t &tag)
     {
         if (!remaining_size)
             return false;
@@ -241,7 +164,7 @@ namespace tlvcpp
         return true;
     }
 
-    static bool deserialize_length(const uint8_t *&buffer, size_t &remaining_size, length_t &length)
+    bool deserialize_length(const uint8_t *&buffer, size_t &remaining_size, length_t &length)
     {
         if (!remaining_size)
             return false;
@@ -277,63 +200,4 @@ namespace tlvcpp
         return true;
     }
 
-    static bool deserialize_recursive(const uint8_t *&buffer, size_t &remaining_size, tlv_tree_node &node)
-    {
-        while (remaining_size)
-        {
-            tag_t tag = 0;
-
-            if (!deserialize_tag(buffer, remaining_size, tag))
-                return false;
-
-            length_t length = 0;
-
-            if (!deserialize_length(buffer, remaining_size, length))
-                return false;
-
-            if (length > remaining_size)
-                return false;
-
-            if (tag_is_primitive(tag))
-            {
-                node.add_child(tag, length, buffer);
-
-                buffer += length;
-                remaining_size -= length;
-            }
-            else
-            {
-                auto &child = node.add_child(tag, 0U, nullptr);
-
-                size_t _remaining_size = length;
-
-                if (!deserialize_recursive(buffer, _remaining_size, child))
-                    return false;
-
-                remaining_size -= length;
-            }
-        }
-
-        return true;
-    }
-
-    template <>
-    bool tree_node<tlvcpp::tlv>::deserialize(const uint8_t *buffer, const size_t size)
-    {
-        size_t remaining_size = size;
-
-        if (!deserialize_recursive(buffer, remaining_size, *this))
-            return false;
-
-        if (this->data().tag() == 0 && children().size() == 1)
-            *this = std::move(children().front());
-
-        return true;
-    }
-
-    template <>
-    bool tree_node<tlvcpp::tlv>::deserialize(const std::vector<uint8_t> &buffer)
-    {
-        return deserialize(buffer.data(), buffer.size());
-    }
 }

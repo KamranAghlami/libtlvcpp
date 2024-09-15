@@ -1,6 +1,58 @@
 #include <gtest/gtest.h>
 
+#include <limits>
+#include <new>
+
 #include "tlvcpp/tlv_tree.h"
+
+template <class T>
+struct test_allocator
+{
+    typedef T value_type;
+
+    test_allocator() = default;
+
+    template <class U>
+    constexpr test_allocator(const test_allocator<U> &) noexcept {}
+
+    [[nodiscard]] T *allocate(std::size_t n)
+    {
+        if (n > std::numeric_limits<std::size_t>::max() / sizeof(T))
+            throw std::bad_array_new_length();
+
+        if (auto p = static_cast<T *>(std::malloc(n * sizeof(T))))
+        {
+            report(p, n, true);
+
+            return p;
+        }
+
+        throw std::bad_alloc();
+    }
+
+    void deallocate(T *p, std::size_t n) noexcept
+    {
+        report(p, n, false);
+
+        std::free(p);
+    }
+
+private:
+    void report(T *p, std::size_t n, bool alloc) const
+    {
+        tlvcpp::stream_guard guard{std::cout};
+
+        std::cout << (alloc ? " + " : " - ") << sizeof(T) * n
+                  << " bytes at " << std::hex << std::showbase
+                  << reinterpret_cast<void *>(p) << std::dec << '\n';
+    }
+};
+
+template <class T, class U>
+bool operator==(const test_allocator<T> &, const test_allocator<U> &) { return true; }
+
+template <class T, class U>
+bool operator!=(const test_allocator<T> &, const test_allocator<U> &) { return false; }
 
 class decode_encode : public ::testing::TestWithParam<std::tuple<const char *, size_t>>
 {
@@ -18,15 +70,15 @@ protected:
     }
 
     std::vector<uint8_t> deserialized;
-    tlvcpp::tlv_tree_node m_tlv_tree;
+    tlvcpp::tlv_tree_node<test_allocator<tlvcpp::value_t>> m_tlv_tree;
 };
 
 TEST_P(decode_encode, buffer2vector)
 {
     std::vector<uint8_t> serialized;
 
-    ASSERT_TRUE(m_tlv_tree.deserialize(deserialized.data(), deserialized.size()));
-    ASSERT_TRUE(m_tlv_tree.serialize(serialized));
+    ASSERT_TRUE(tlvcpp::deserialize(deserialized.data(), deserialized.size(), m_tlv_tree));
+    ASSERT_TRUE(tlvcpp::serialize(m_tlv_tree, serialized));
     ASSERT_EQ(serialized.size(), deserialized.size());
     ASSERT_EQ(memcmp(serialized.data(), deserialized.data(), deserialized.size()), 0);
 }
@@ -35,8 +87,8 @@ TEST_P(decode_encode, vector2vector)
 {
     std::vector<uint8_t> serialized;
 
-    ASSERT_TRUE(m_tlv_tree.deserialize(deserialized));
-    ASSERT_TRUE(m_tlv_tree.serialize(serialized));
+    ASSERT_TRUE(tlvcpp::deserialize(deserialized, m_tlv_tree));
+    ASSERT_TRUE(tlvcpp::serialize(m_tlv_tree, serialized));
     ASSERT_EQ(serialized.size(), deserialized.size());
     ASSERT_EQ(memcmp(serialized.data(), deserialized.data(), deserialized.size()), 0);
 }

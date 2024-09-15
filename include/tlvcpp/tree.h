@@ -37,7 +37,7 @@ namespace tlvcpp
                 graft(child);
         };
 
-        tree_node(tree_node &other) : tree_node(const_cast<const tree_node &>(other)){};
+        tree_node(tree_node &other) : tree_node(const_cast<const tree_node &>(other)) {};
 
         tree_node &operator=(const tree_node &other)
         {
@@ -227,9 +227,14 @@ namespace tlvcpp
             return other.is_child_of(*this);
         }
 
-        bool serialize(std::vector<uint8_t> &buffer, size_t *bytes_written = nullptr) const;
-        bool deserialize(const uint8_t *buffer, const size_t size);
-        bool deserialize(const std::vector<uint8_t> &buffer);
+        template <typename U>
+        friend bool serialize(const U &node, std::vector<uint8_t> &buffer);
+
+        template <typename U>
+        friend bool deserialize(const uint8_t *buffer, const size_t size, U &node);
+
+        template <typename U>
+        friend bool deserialize(const std::vector<uint8_t> &buffer, U &node);
 
         void dump(const size_t &indentation = 0, std::ostream &stream = std::cout) const
         {
