@@ -56,6 +56,25 @@ tlvcpp::tlv* foundElement = root.find(2);
 tlvcpp::tlv* foundImmediateElement = root.find_immediate(2);
 ```
 
+### Store Custom Types
+```cpp
+namespace tlvcpp
+{
+    // store_type is a templated friend function of tlvcpp::tlv
+    template <>
+    void store_type(const std::string &string, tlv<> &t)
+    {
+        if (string.size())
+        {
+            t.m_length = static_cast<length_t>(string.size() + 1);
+            t.m_value = t.m_alloc.allocate(t.m_length);
+
+            std::memcpy(t.m_value, string.c_str(), t.m_length);
+        }
+    }
+}
+```
+
 ## Build Process
 
 `libtlvcpp` uses CMake for its build process. Follow these steps to build the library:

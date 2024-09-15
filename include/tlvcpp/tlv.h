@@ -23,11 +23,6 @@ namespace tlvcpp
     bool tag_is_primitive(tag_t tag);
 
     /*
-     * TODO:
-     *  * Deal with:
-     *       template <typename T>
-     *       tlv(const tag_t &tag, const T &type, const allocator &alloc = allocator());
-     *
      *  * Deciding what happens with statefull allocators when copying or moving...
      *      https://en.cppreference.com/w/cpp/named_req/AllocatorAwareContainer
      *      https://en.cppreference.com/w/cpp/memory/allocator_traits
@@ -39,8 +34,15 @@ namespace tlvcpp
     public:
         tlv(const tag_t &tag = 0, const length_t &length = 0, const value_t *value = nullptr, const allocator &alloc = allocator());
 
+        template <typename T, typename a>
+        friend void store_type(const T &type, tlv<a> &);
+
         template <typename T>
-        tlv(const tag_t &tag, const T &type, const allocator &alloc = allocator());
+        tlv(const tag_t &tag, const T &type, const allocator &alloc = allocator())
+            : m_tag(tag), m_length(0), m_value(nullptr), m_alloc(alloc)
+        {
+            store_type(type, *this);
+        }
 
         ~tlv();
 
@@ -206,4 +208,7 @@ namespace tlvcpp
     {
         return tlv.m_tag == tag;
     }
+
+    template <typename T, typename a>
+    void store_type(const T &type, tlv<a> &);
 }

@@ -54,6 +54,21 @@ bool operator==(const test_allocator<T> &, const test_allocator<U> &) { return t
 template <class T, class U>
 bool operator!=(const test_allocator<T> &, const test_allocator<U> &) { return false; }
 
+namespace tlvcpp
+{
+    template <>
+    void store_type(const std::string &string, tlv<> &t)
+    {
+        if (string.size())
+        {
+            t.m_length = static_cast<length_t>(string.size() + 1);
+            t.m_value = t.m_alloc.allocate(t.m_length);
+
+            std::memcpy(t.m_value, string.c_str(), t.m_length);
+        }
+    }
+}
+
 class decode_encode : public ::testing::TestWithParam<std::tuple<const char *, size_t>>
 {
 protected:
