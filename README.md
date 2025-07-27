@@ -85,6 +85,4 @@ This library is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contributing
 
-Feel free to contribute by opening issues or pull requests on the [GitHub repository](https://github.com/your-username/libtlvcpp).
-
-Happy coding!
+Feel free to contribute by opening issues or pull requests on the repository.
